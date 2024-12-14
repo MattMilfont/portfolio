@@ -1,8 +1,8 @@
 export interface User {
-  id: string;
-  nome: string;
-  cpf: string;
-  senha: string;
+  userID: string;
+  name: string;
+  email: string;
+  password: string;
 }
 
 export type UserRequest = Omit<User, "id">;

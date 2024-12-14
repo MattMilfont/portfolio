@@ -2,28 +2,34 @@
 
 import { useState } from "react";
 
-interface User {
-  id: string;
-  nome: string;
-  cpf: string;
-  senha: string;
-}
-
-export default function HomePage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchUsers = async () => {
+  const handleLogin = async () => {
     setIsLoading(true);
+    setMessage(null);
     setError(null);
+
     try {
-      const response = await fetch("/api/users");
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
       if (!response.ok) {
-        throw new Error("Erro ao buscar usuários");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro desconhecido");
       }
+
       const data = await response.json();
-      setUsers(data); // Atualiza o estado com os usuários
+      setMessage(data.message);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -36,21 +42,47 @@ export default function HomePage() {
   };
 
   return (
-    <div>
-      <h1>Lista de Usuários</h1>
+    <div className="container mt-5">
+      <h2 className="mb-4">Login</h2>
 
-      {/* Botão para buscar os usuários */}
-      <button onClick={fetchUsers} disabled={isLoading}>
-        {isLoading ? "Carregando..." : "Buscar Usuários"}
+      <div className="mb-3">
+        <label htmlFor="email" className="form-label">
+          E-mail
+        </label>
+        <input
+          type="email"
+          className="form-control"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="password" className="form-label">
+          Senha
+        </label>
+        <input
+          type="password"
+          className="form-control"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+
+      <button
+        className="btn btn-primary w-100"
+        onClick={handleLogin}
+        disabled={isLoading}
+      >
+        {isLoading ? "Carregando..." : "Entrar"}
       </button>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <ul>
-        {users.map((user) => (
-          <li key={user.id}>{user.nome}</li>
-        ))}
-      </ul>
+      {message && <div className="alert alert-success mt-3">{message}</div>}
+      {error && <div className="alert alert-danger mt-3">{error}</div>}
     </div>
   );
 }

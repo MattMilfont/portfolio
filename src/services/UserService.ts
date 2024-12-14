@@ -12,6 +12,6 @@ export const getUsers = async (): Promise<UserModel[]> => {
   const users: User[] = await response.json();
 
   return users.map(
-    (user) => new UserModel(user.id, user.nome, user.cpf, user.senha)
+    (user) => new UserModel(user.userID, user.name, user.email, user.password)
   );
 };
