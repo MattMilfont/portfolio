@@ -8,7 +8,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
   return (
     <nav className="navbar navbar-expand-lg bg-primary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#" style={{ color: "white" }}>
+        <a className="navbar-brand" href="/main" style={{ color: "white" }}>
           <b>{title}</b>
         </a>
         <button
@@ -29,13 +29,13 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 className="nav-link"
                 style={{ color: "white" }}
                 aria-current="page"
-                href="#"
+                href="/main"
               >
                 <b>Home</b>
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" style={{ color: "white" }} href="#">
+              <a className="nav-link" style={{ color: "white" }} href="/trucks">
                 <b>Caminhões</b>
               </a>
             </li>

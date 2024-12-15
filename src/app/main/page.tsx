@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-import Header from "@/components/header"; // Caminho relativo ou alias (usando `@`)
+import Header from "@/components/header";
 
-// Definição do tipo para os dados de entregas
 interface Delivery {
   deliveryID: number;
   destination: string;
