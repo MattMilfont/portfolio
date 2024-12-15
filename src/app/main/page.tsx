@@ -1,14 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import Header from "@/components/header"; // Caminho relativo ou alias (usando `@`)
+
+// Definição do tipo para os dados de entregas
+interface Delivery {
+  deliveryID: number;
+  destiantion: string;
+  origin: string;
+  departureDate: string;
+  arrivalDate: string;
+  type: string;
+}
 
 export default function MainPage() {
-  const [deliveries, setDeliveries] = useState([]);
+  const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGetDeliveries = async () => {
+  // Função para buscar entregas da API
+  const fetchDeliveries = async () => {
     setIsLoading(true);
     setError(null);
     setMessage(null);
@@ -17,7 +30,7 @@ export default function MainPage() {
       const response = await fetch("/api/deliveries");
       if (!response.ok) throw new Error("Erro ao buscar entregas");
 
-      const data = await response.json();
+      const data: Delivery[] = await response.json(); // Especifica o tipo esperado
       setDeliveries(data);
       setMessage("Entregas carregadas com sucesso");
     } catch (err: unknown) {
@@ -28,23 +41,43 @@ export default function MainPage() {
     }
   };
 
+  // Executar fetchDeliveries no carregamento da página
+  useEffect(() => {
+    fetchDeliveries();
+  }, []); // O array vazio faz o useEffect ser executado apenas uma vez
+
   return (
-    <div>
-      <h1>Bem-vindo à página principal!</h1>
-      <p>Esta é a página main.</p>
+    <div className="container-fluid">
+      <Header title="Truck Delivery" />
+      <div className="col-md-8 offset-md-2 mt-3">
+        <h1>Bem-vindo à página principal!</h1>
+        <p>Esta é a página main.</p>
 
-      <button onClick={handleGetDeliveries} disabled={isLoading}>
-        {isLoading ? "Carregando..." : "Buscar"}
-      </button>
+        {isLoading && <p>Carregando...</p>}
+        {message && <p style={{ color: "green" }}>{message}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
 
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <ul>
-        {deliveries.map((delivery, index) => (
-          <li key={index}>{JSON.stringify(delivery)}</li>
-        ))}
-      </ul>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>ID da entrega</th>
+              <th>Destino</th>
+              <th>Tipo</th>
+              <th>Previsão de Chegada</th>
+            </tr>
+          </thead>
+          <tbody>
+            {deliveries.map((delivery, index) => (
+              <tr key={delivery.deliveryID}>
+                <td>{delivery.deliveryID}</td>
+                <td>{delivery.destiantion}</td>
+                <td>{delivery.type}</td>
+                <td>{delivery.arrivalDate}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
