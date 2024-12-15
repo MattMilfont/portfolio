@@ -13,7 +13,9 @@ export async function GET() {
     });
 
     console.log("Conexão bem-sucedida! Executando consulta...");
-    const [rows] = await connection.execute("SELECT * FROM deliveries");
+    const [rows] = await connection.execute(
+        "SELECT deliveries.deliveryID, deliveries.destination, deliveries.arrivalDate, deliveries.type, trucks.truckID, trucks.model, drivers.driverID, drivers.name FROM deliveries INNER JOIN trucks ON deliveries.truckID = trucks.truckID INNER JOIN drivers ON deliveries.driverID = drivers.driverID"
+    );
     console.log("Resultados da consulta:", rows);
 
     await connection.end();

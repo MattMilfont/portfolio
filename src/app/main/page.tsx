@@ -7,10 +7,12 @@ import Header from "@/components/header"; // Caminho relativo ou alias (usando `
 // Definição do tipo para os dados de entregas
 interface Delivery {
   deliveryID: number;
-  destiantion: string;
+  destination: string;
   origin: string;
   departureDate: string;
   arrivalDate: string;
+  name: string;
+  model: string;
   type: string;
 }
 
@@ -47,36 +49,49 @@ export default function MainPage() {
   }, []); // O array vazio faz o useEffect ser executado apenas uma vez
 
   return (
-    <div className="container-fluid">
-      <Header title="Truck Delivery" />
-      <div className="col-md-8 offset-md-2 mt-3">
-        <h1>Bem-vindo à página principal!</h1>
-        <p>Esta é a página main.</p>
+    <div>
+      <Header title="Mojave Express" />
+      <div className="container-fluid">
+        <div
+          className="col-md-8 offset-md-2 mt-10"
+          style={{ paddingTop: "2%" }}
+        >
+          <h1>Bem-vindo ao Mojave Express Manager</h1>
+          <p>
+            Esse sistema foi feito para que você possa gerenciar a sua frota de
+            caminhões de forma prática e fácil.
+          </p>
+          {isLoading && <p>Carregando...</p>}
+          {message && <p style={{ color: "green" }}>{message}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
 
-        {isLoading && <p>Carregando...</p>}
-        {message && <p style={{ color: "green" }}>{message}</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>ID da entrega</th>
-              <th>Destino</th>
-              <th>Tipo</th>
-              <th>Previsão de Chegada</th>
-            </tr>
-          </thead>
-          <tbody>
-            {deliveries.map((delivery, index) => (
-              <tr key={delivery.deliveryID}>
-                <td>{delivery.deliveryID}</td>
-                <td>{delivery.destiantion}</td>
-                <td>{delivery.type}</td>
-                <td>{delivery.arrivalDate}</td>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>ID da entrega</th>
+                <th>Destino</th>
+                <th>Tipo</th>
+                <th>Previsão de Chegada</th>
+                <th>Motorista</th>
+                <th>Caminhão</th>
+                <th>Valor</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {deliveries.map((delivery) => (
+                <tr key={delivery.deliveryID}>
+                  <td>{delivery.deliveryID}</td>
+                  <td>{delivery.destination}</td>
+                  <td>{delivery.type}</td>
+                  <td>{delivery.arrivalDate}</td>
+                  <td>{delivery.name}</td>
+                  <td>{delivery.model}</td>
+                  <td>R$ 0,00</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
