@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 
 import Header from "@/components/header";
 
+import { Truck, TruckModel } from "@/models/TruckModel";
+
+import { TruckService } from "@/services/TruckService"; // Importando o serviço
+import { DriverService } from "@/services/DriverService";
+import { Driver, DriverModel } from "@/models/DriverModel";
+
 interface Delivery {
   deliveryID: number;
   destination: string;
@@ -13,11 +19,6 @@ interface Delivery {
   name: string;
   model: string;
   type: string;
-}
-
-interface Truck {
-  truckID: number;
-  model: string;
 }
 
 export default function DeliveriesPage() {
@@ -31,6 +32,7 @@ export default function DeliveriesPage() {
   const [truck, setTruck] = useState("");
   const [driver, setDriver] = useState("");
   const [trucks, setTrucks] = useState<Truck[]>([]);
+  const [drivers, setDrivers] = useState<Driver[]>([]);
 
   const fetchTrucks = async () => {
     setIsLoading(true);
@@ -38,23 +40,41 @@ export default function DeliveriesPage() {
     setMessage(null);
 
     try {
-      const response = await fetch("/api/trucks");
-      if (!response.ok) throw new Error("Erro ao buscar entregas");
-
-      const data: Truck[] = await response.json(); // Especifica o tipo esperado
-      setTrucks(data);
+      const data = await TruckService.fetchTrucks(); // Usando o serviço
+      const trucksData = data.map(
+        (truck) => new TruckModel(truck.truckID, truck.model) // Criando instâncias de TruckModel
+      );
+      setTrucks(trucksData);
       setMessage("Caminhões carregados com sucesso");
     } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Erro desconhecido");
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Executar fetchDeliveries no carregamento da página
+  const fetchDrivers = async () => {
+    setIsLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const data = await DriverService.fetchDrivers(); // Usando o serviço
+      const driverData = data.map(
+        (driver) => new DriverModel(driver.driverID, driver.name) // Criando instâncias de TruckModel
+      );
+      setDrivers(driverData);
+      setMessage("Motoristas carregados com sucesso");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchTrucks();
+    fetchDrivers();
   }, []);
 
   const typeOptions = ["Eletronicos", "Combustivel", "Comum"];
@@ -151,7 +171,7 @@ export default function DeliveriesPage() {
                   onChange={(e) => setDestination(e.target.value)}
                   required
                 >
-                  <option value="">Selecione o Tipo de Carga</option>
+                  <option value="">Selecione o Motorista</option>
                   {trucks.map((option) => (
                     <option key={option.truckID} value={option.truckID}>
                       {option.truckID} -{option.model}
@@ -161,14 +181,27 @@ export default function DeliveriesPage() {
                 <label htmlFor="text" className="form-label mt-1">
                   <b>Motorista</b>
                 </label>
-                <input
-                  type="text"
+                <select
                   className="form-control mt-1"
-                  id="destination"
-                  value={destination}
+                  id="driver"
+                  value={driver}
                   onChange={(e) => setDestination(e.target.value)}
                   required
-                />
+                >
+                  <option value="">Selecione o Motorista</option>
+                  {drivers.map((option) => (
+                    <option key={option.driverID} value={option.driverID}>
+                      {option.driverID} -{option.name}
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  className="btn btn-primary w-20 text-center mt-3"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Carregando..." : "Enviar"}
+                </button>
               </div>
             </div>
           </div>

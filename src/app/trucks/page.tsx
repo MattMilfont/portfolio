@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 
 import Header from "@/components/header";
 import { Truck, TruckModel } from "@/models/TruckModel";
-import { TruckService } from "@/services/TruckService"; // Importando o serviço
+import { TruckService } from "@/services/TruckService";
 
 export default function TrucksPage() {
   const [model, setNewTruck] = useState("");
@@ -19,7 +19,7 @@ export default function TrucksPage() {
     setError(null);
     setMessage(null);
     try {
-      await TruckService.deleteTruck(id); // Usando o serviço
+      await TruckService.deleteTruck(id);
       fetchTrucks();
       setMessage("Caminhão excluído com sucesso");
     } catch (err: unknown) {
@@ -35,7 +35,7 @@ export default function TrucksPage() {
     setMessage(null);
 
     try {
-      await TruckService.addTruck(model); // Usando o serviço
+      await TruckService.addTruck(model); 
       fetchTrucks();
       setMessage("Caminhão adicionado com sucesso");
     } catch (err: unknown) {
@@ -51,9 +51,9 @@ export default function TrucksPage() {
     setMessage(null);
 
     try {
-      const data = await TruckService.fetchTrucks(); // Usando o serviço
+      const data = await TruckService.fetchTrucks();
       const trucksData = data.map(
-        (truck) => new TruckModel(truck.truckID, truck.model) // Criando instâncias de TruckModel
+        (truck) => new TruckModel(truck.truckID, truck.model) 
       );
       setTrucks(trucksData);
       setMessage("Caminhões carregados com sucesso");
