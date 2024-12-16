@@ -171,7 +171,7 @@ export default function DeliveriesPage() {
                   onChange={(e) => setDestination(e.target.value)}
                   required
                 >
-                  <option value="">Selecione o Motorista</option>
+                  <option value="">Selecione o Caminhão</option>
                   {trucks.map((option) => (
                     <option key={option.truckID} value={option.truckID}>
                       {option.truckID} -{option.model}
