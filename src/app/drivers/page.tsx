@@ -8,7 +8,6 @@ import { DriverService } from "@/services/DriverService";
 
 export default function DriversPage() {
   const [name, setNewDriver] = useState("");
-  const [driverID, setDeleteDriver] = useState<number | null>(null);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +35,8 @@ export default function DriversPage() {
 
     try {
       await DriverService.addDriver(name);
-      fetchDrivers();
       setMessage("Motorista adicionado com sucesso");
+      fetchDrivers();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
@@ -56,7 +55,6 @@ export default function DriversPage() {
         (driver) => new DriverModel(driver.driverID, driver.name)
       );
       setDrivers(driversData);
-      setMessage("Motoristas carregados com sucesso");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
@@ -77,8 +75,10 @@ export default function DriversPage() {
           style={{ paddingTop: "2%" }}
         >
           <div className="card">
+            <div className="card-header bg-primary">
+              <h2 className="m-2 text-light">Motoristas</h2>
+            </div>
             <div className="m-3">
-              <h2>Motoristas</h2>
               <p>
                 Nessa seção de motoristas você pode adicionar novos motoristas,
                 editar aqueles que já tem e deletar os nomes que não estão mais
@@ -117,10 +117,31 @@ export default function DriversPage() {
           </div>
           <div className="col-md-4">
             <div className="card">
-              <div className="m-3">
-                <h5>
+              <div className="card-header bg-primary">
+                <h5 className="text-light m-2">
                   <b>Adicionar Motorista</b>
                 </h5>
+              </div>
+              <div className="m-3">
+                {isLoading && <p>Carregando...</p>}
+                {message && 
+                  <div className="row mt-2">
+                    <div className="col-md-12">
+                      <div className="alert alert-success text-center">
+                        <p style={{ color: "green" }}>{message}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+                {error && 
+                  <div className="row mt-2">
+                    <div className="col-md-12">
+                      <div className="alert alert-danger text-center">
+                        <p style={{ color: "red" }}>{error}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
                 <label htmlFor="text" className="form-label">
                   <b>Nome do Motorista</b>
                 </label>
