@@ -14,9 +14,9 @@ export default function MainPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const formatCurrency = (value: string): string => {
-    const numericValue = value.replace(/\D/g, "");
+    const numericValue = value.replace(".", ",");
   
-    const valueInCents = Number(numericValue) / 100;
+    const valueInCents = Number(numericValue);
   
     const formattedValue = valueInCents.toFixed(2).replace(".", ",");
   
