@@ -6,13 +6,38 @@ import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 
 import Header from "@/components/header";
 import { DeliveryService } from "@/services/DeliveryService";
-import { formatDate, formatFloatToCurrency } from "@/controllers/deliveriesController";
+import { destinationOptions, formatDate, formatFloatToCurrency, typeOptions } from "@/controllers/deliveriesController";
 
 export default function MainPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(0);
+  const [type, setType] = useState("");
+  const [destination, setDestination] = useState("");
+  const [arrivalDate, setArrivalDate] = useState("");
+
+  const handleEditing = (deliveryID: number) => {
+    setIsEditing(deliveryID);
+  }
+
+  const fetchUpdateDelivery = async (deliveryID: number) => {
+      setIsLoading(true);
+      setError(null);
+      setMessage(null);
+  
+      try {
+        await DeliveryService.updateDelivery(deliveryID, destination, arrivalDate, type); 
+        setMessage("Entrega editada com sucesso");
+        setIsEditing(0);
+        fetchDeliveries();
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Erro desconhecido");
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   const fetchDeleteDelivery = async (id: number) => {
       setIsLoading(true);
@@ -103,7 +128,63 @@ export default function MainPage() {
             </thead>
             <tbody className="text-center">
               {deliveries.map((delivery) => (
-                <tr key={delivery.deliveryID}>
+                isEditing == delivery.deliveryID ? (
+                <tr key={delivery.deliveryID} className="align-middle">
+                  <td>
+                    {delivery.type == "Combustível" && <i className="bi bi-fire m-2"></i> } 
+                    {delivery.value >= 30000 && <i className="bi bi-cash-stack m-2"></i> }
+                    {delivery.secure == 1 && <i className="bi bi-lock-fill m-2"></i>}
+                  </td>
+                  <td>{delivery.deliveryID}</td>
+                  <td>
+                      <select
+                        className="form-control mt-1"
+                        id="destination"
+                        value={destination}
+                        onChange={(e) => setDestination(e.target.value)}
+                        required
+                      >
+                        <option value="">Selecione o Destino</option>
+                        {destinationOptions.map((option, index) => (
+                          <option key={index} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                  </td>
+                  <td>
+                    <select
+                      className="form-control mt-1"
+                      id="type"
+                      value={type}
+                      onChange={(e) => setType(e.target.value)}
+                      required
+                    >
+                      <option value="">Selecione o Tipo de Carga</option>
+                      {typeOptions.map((option, index) => (
+                        <option key={index} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      className="form-control mt-1"
+                      id="arrivalDate"
+                      value={arrivalDate}
+                      onChange={(e) => setArrivalDate(e.target.value)}
+                      required
+                    />
+                </td>
+                  <td>{delivery.name}</td>
+                  <td>{delivery.model}</td>
+                  <td>{formatFloatToCurrency(delivery.value)}</td>
+                  <td><button className="btn btn-success" onClick={() => fetchUpdateDelivery(delivery.deliveryID)}>Salvar</button><button className="btn btn-danger m-3" onClick={() => handleEditing(0)}>Cancelar</button></td>
+                </tr>
+                ) : (
+                  <tr key={delivery.deliveryID} className="align-middle">
                   <td>
                     {delivery.type == "Combustível" && <i className="bi bi-fire m-2"></i> } 
                     {delivery.value >= 30000 && <i className="bi bi-cash-stack m-2"></i> }
@@ -116,8 +197,9 @@ export default function MainPage() {
                   <td>{delivery.name}</td>
                   <td>{delivery.model}</td>
                   <td>{formatFloatToCurrency(delivery.value)}</td>
-                  <td><button className="btn btn-danger" onClick={() => fetchDeleteDelivery(delivery.deliveryID)}>X</button></td>
+                  <td><button className="btn btn-warning" onClick={() => handleEditing(delivery.deliveryID)}>Editar</button><button className="btn btn-danger m-3" onClick={() => fetchDeleteDelivery(delivery.deliveryID)}>X</button></td>
                 </tr>
+                )
               ))}
             </tbody>
           </table>

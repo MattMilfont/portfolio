@@ -11,7 +11,7 @@ import { TruckService } from "@/services/TruckService"; // Importando o serviço
 import { DriverService } from "@/services/DriverService";
 import { Driver, DriverModel } from "@/models/DriverModel";
 import { DeliveryService } from "@/services/DeliveryService";
-import { destinationOptions, formatCurrency, formatDate, parseCurrencyToNumber, secureOptions, typeOptions, valueCalculation } from "@/controllers/deliveriesController";
+import { destinationOptions, formatCurrency, formatDate, formatFloatToCurrency, parseCurrencyToNumber, secureOptions, typeOptions, valueCalculation } from "@/controllers/deliveriesController";
 
 export default function DeliveriesPage() {
   const [message, setMessage] = useState<string | null>(null);
@@ -33,8 +33,6 @@ export default function DeliveriesPage() {
     setError(null);
     setMessage(null);
 
-    console.log(value);
-
     try {
       console.log(value);
       await DeliveryService.addDelivery(destination, arrivalDate, type, Number(truck), Number(driver), parseCurrencyToNumber(value), Number(secure)); 
@@ -45,14 +43,6 @@ export default function DeliveriesPage() {
       setIsLoading(false);
     }
   };
-
-  const formatFloatToCurrency = (value: number): string => {
-    return value.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  };
-
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;

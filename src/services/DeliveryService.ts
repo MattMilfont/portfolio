@@ -63,4 +63,33 @@ export const DeliveryService = {
       throw err instanceof Error ? err : new Error("Erro desconhecido");
     }
   },
+
+  async updateDelivery(
+    deliveryID: number,
+    destination: string,
+    arrivalDate: string,
+    type: string,
+  ): Promise<void> {
+    try {
+      const response = await fetch(`${API_URL}?deliveryID=${deliveryID}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          destination,
+          arrivalDate,
+          type,
+          deliveryID,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Erro ao editar entrega");
+      }
+    } catch (err: unknown) {
+      throw err instanceof Error ? err : new Error("Erro desconhecido");
+    }
+  },
 };

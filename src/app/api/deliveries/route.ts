@@ -231,3 +231,65 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const { deliveryID, destination, arrivalDate, type } = await req.json();
+
+    console.log("Dados recebidos para atualização:", {
+      deliveryID,
+      destination,
+      arrivalDate,
+      type,
+    });
+
+    if (!deliveryID || !destination || !arrivalDate || !type) {
+      return NextResponse.json(
+        { error: "Todos os campos são obrigatórios." },
+        { status: 400 }
+      );
+    }
+
+    console.log("Iniciando conexão com o banco de dados...");
+    const connection = await mysql.createConnection({
+      host: "localhost",
+      user: "root",
+      password: "",
+      database: "desafio_pm",
+    });
+
+    console.log("Conexão bem-sucedida! Atualizando dados...");
+
+    const query = `
+      UPDATE deliveries
+      SET destination = ?, arrivalDate = ?, type = ?
+      WHERE deliveryID = ?
+    `;
+
+    const values = [destination, arrivalDate, type, deliveryID];
+
+    const [result] = await connection.execute(query, values);
+
+    if ((result as any).affectedRows === 0) {
+      return NextResponse.json(
+        { error: "Entrega não encontrada." },
+        { status: 404 }
+      );
+    }
+
+    await connection.end();
+    console.log("Atualização realizada com sucesso.");
+
+    return NextResponse.json(
+      { message: "Entrega atualizada com sucesso!" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Erro ao atualizar entrega:", error);
+
+    return NextResponse.json(
+      { error: "Erro ao atualizar entrega." },
+      { status: 500 }
+    );
+  }
+}
