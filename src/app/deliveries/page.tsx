@@ -25,6 +25,8 @@ export default function DeliveriesPage() {
   const [secure, setSecure] = useState(0);
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [deliveries, setDeliveries] = useState<Delivery[]>([]);
+
   
 
   const valueCalculation = (destination: string, value: string) => {
@@ -48,6 +50,15 @@ export default function DeliveriesPage() {
     return formattedValue;
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear(); 
+  
+    return `${day}/${month}/${year}`; 
+  }
+
   const fetchNewDelivery = async () => {
     setIsLoading(true);
     setError(null);
@@ -64,6 +75,13 @@ export default function DeliveriesPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const formatFloatToCurrency = (value: number): string => {
+    return value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
   };
 
   const formatCurrency = (value: string) => {
@@ -126,9 +144,42 @@ export default function DeliveriesPage() {
     }
   };
 
+  const fetchDeliveries = async () => {
+    setIsLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      const data = await DeliveryService.fetchDeliveries();
+      const deliveriesData = data.map(
+        (delivery) =>
+          new DeliveryModel(
+            delivery.deliveryID,
+            delivery.destination,
+            delivery.origin,
+            delivery.departureDate,
+            delivery.arrivalDate,
+            delivery.name,
+            delivery.model,
+            delivery.type,
+            delivery.value,
+            delivery.secure,
+          )
+      );
+      setDeliveries(deliveriesData);
+      setMessage("Entregas carregadas com sucesso");
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Erro desconhecido");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchTrucks();
     fetchDrivers();
+    fetchDeliveries();
   }, []);
 
   const typeOptions = ["Eletrônicos", "Combustível", "Comum"];
@@ -167,7 +218,7 @@ export default function DeliveriesPage() {
           </div>
         </div>
         <div className="row mt-4 mb-4">
-          <div className="col-md-5 offset-md-1">
+          <div className="col-md-4 offset-md-1">
             <div className="card">
               <div className="m-3">
                 <h5 className="mb-3">
@@ -298,6 +349,34 @@ export default function DeliveriesPage() {
                 </button>
               </div>
             </div>
+          </div>
+          <div className="col-md-6">
+          <table className="table table-striped">
+            <thead className="text-center">
+              <tr>
+                <th>ID da entrega</th>
+                <th>Destino</th>
+                <th>Tipo</th>
+                <th>Previsão de Chegada</th>
+                <th>Motorista</th>
+                <th>Caminhão</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody className="text-center">
+              {deliveries.map((delivery) => (
+                <tr key={delivery.deliveryID}>
+                  <td>{delivery.deliveryID}</td>
+                  <td>{delivery.destination}</td>
+                  <td>{delivery.type}</td>
+                  <td>{formatDate(delivery.arrivalDate)}</td>
+                  <td>{delivery.name}</td>
+                  <td>{delivery.model}</td>
+                  <td>{formatFloatToCurrency(delivery.value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
           </div>
         </div>
       </div>
