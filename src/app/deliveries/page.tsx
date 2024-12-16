@@ -5,21 +5,11 @@ import { useState, useEffect } from "react";
 import Header from "@/components/header";
 
 import { Truck, TruckModel } from "@/models/TruckModel";
+import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 
 import { TruckService } from "@/services/TruckService"; // Importando o serviço
 import { DriverService } from "@/services/DriverService";
 import { Driver, DriverModel } from "@/models/DriverModel";
-
-interface Delivery {
-  deliveryID: number;
-  destination: string;
-  origin: string;
-  departureDate: string;
-  arrivalDate: string;
-  name: string;
-  model: string;
-  type: string;
-}
 
 export default function DeliveriesPage() {
   const [message, setMessage] = useState<string | null>(null);

@@ -2,18 +2,10 @@
 
 import { useState, useEffect } from "react";
 
-import Header from "@/components/header";
+import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 
-interface Delivery {
-  deliveryID: number;
-  destination: string;
-  origin: string;
-  departureDate: string;
-  arrivalDate: string;
-  name: string;
-  model: string;
-  type: string;
-}
+import Header from "@/components/header";
+import { DeliveryService } from "@/services/DeliveryService";
 
 export default function MainPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
@@ -21,18 +13,27 @@ export default function MainPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Função para buscar entregas da API
   const fetchDeliveries = async () => {
     setIsLoading(true);
     setError(null);
     setMessage(null);
 
     try {
-      const response = await fetch("/api/deliveries");
-      if (!response.ok) throw new Error("Erro ao buscar entregas");
-
-      const data: Delivery[] = await response.json(); // Especifica o tipo esperado
-      setDeliveries(data);
+      const data = await DeliveryService.fetchDeliveries();
+      const deliveriesData = data.map(
+        (delivery) =>
+          new DeliveryModel(
+            delivery.deliveryID,
+            delivery.destination,
+            delivery.origin,
+            delivery.departureDate,
+            delivery.arrivalDate,
+            delivery.name,
+            delivery.model,
+            delivery.type
+          )
+      );
+      setDeliveries(deliveriesData);
       setMessage("Entregas carregadas com sucesso");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
