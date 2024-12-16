@@ -34,8 +34,8 @@ export default function DeliveriesPage() {
     setMessage(null);
 
     try {
-      console.log(value);
       await DeliveryService.addDelivery(destination, arrivalDate, type, Number(truck), Number(driver), parseCurrencyToNumber(value), Number(secure)); 
+      fetchDeliveries();
       setMessage("Entrega adicionada com sucesso");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
@@ -60,7 +60,6 @@ export default function DeliveriesPage() {
         (truck) => new TruckModel(truck.truckID, truck.model) // Criando instâncias de TruckModel
       );
       setTrucks(trucksData);
-      setMessage("Caminhões carregados com sucesso");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
@@ -79,7 +78,6 @@ export default function DeliveriesPage() {
         (driver) => new DriverModel(driver.driverID, driver.name)
       );
       setDrivers(driverData);
-      setMessage("Motoristas carregados com sucesso");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
@@ -110,7 +108,6 @@ export default function DeliveriesPage() {
           )
       );
       setDeliveries(deliveriesData);
-      setMessage("Entregas carregadas com sucesso");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Erro desconhecido");
@@ -134,26 +131,46 @@ export default function DeliveriesPage() {
           style={{ paddingTop: "2%" }}
         >
           <div className="card">
+            <div className="card-header bg-primary">
+              <h2 className="m-2 text-light">Entregas</h2>
+            </div>
             <div className="m-3">
-              <h2>Entregas</h2>
               <p>
                 Nessa seção de entregas você pode criar novas entregas, editar
                 aquelas que já foram cadastradas e deletar as entregas que estão
                 erradas.
               </p>
-              {isLoading && <p>Carregando...</p>}
-              {message && <p style={{ color: "green" }}>{message}</p>}
-              {error && <p style={{ color: "red" }}>{error}</p>}
             </div>
           </div>
         </div>
         <div className="row mt-4 mb-4">
           <div className="col-md-4 offset-md-1">
             <div className="card">
-              <div className="m-3">
-                <h5 className="mb-3">
+              <div className="card-header bg-primary">
+                <h5 className="m-2 text-light">
                   <b>Nova Entrega</b>
                 </h5>
+              </div>
+              <div className="m-3">
+                {isLoading && <p>Carregando...</p>}
+                {message && 
+                  <div className="row mt-4">
+                    <div className="col-md-12">
+                      <div className="alert alert-success text-center">
+                        <p style={{ color: "green" }}>{message}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
+                {error && 
+                  <div className="row">
+                    <div className="col-md-12">
+                      <div className="alert alert-danger text-center">
+                        <p style={{ color: "red" }}>{error}</p>
+                      </div>
+                    </div>
+                  </div>
+                }
                 <label htmlFor="text" className="form-label">
                   <b>Destino</b>
                 </label>
