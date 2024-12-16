@@ -15,4 +15,38 @@ export const DeliveryService = {
       throw err instanceof Error ? err : new Error("Erro desconhecido");
     }
   },
+
+  async addDelivery(
+    destination: string,
+    arrivalDate: string,
+    type: string,
+    truckID: number,
+    driverID: number,
+    value: number,
+  ): Promise<void> {
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          destination,
+          arrivalDate,
+          type,
+          truckID,
+          driverID,
+          value,
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Erro ao adicionar entrega");
+      }
+    } catch (err: unknown) {
+      throw err instanceof Error ? err : new Error("Erro desconhecido");
+    }
+  }
+  
 };

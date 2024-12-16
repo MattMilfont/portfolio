@@ -10,6 +10,7 @@ import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 import { TruckService } from "@/services/TruckService"; // Importando o serviço
 import { DriverService } from "@/services/DriverService";
 import { Driver, DriverModel } from "@/models/DriverModel";
+import { DeliveryService } from "@/services/DeliveryService";
 
 export default function DeliveriesPage() {
   const [message, setMessage] = useState<string | null>(null);
@@ -34,7 +35,7 @@ export default function DeliveriesPage() {
     else if(destination == "Argentina"){
       numericValue = numericValue * 1.4;
     }
-    else if(destination == "Argentina"){
+    else if(destination == "Nordeste"){
       numericValue = numericValue * 1.3;
     }
 
@@ -44,6 +45,23 @@ export default function DeliveriesPage() {
     });
 
     return formattedValue;
+  };
+
+  const fetchNewDelivery = async () => {
+    setIsLoading(true);
+    setError(null);
+    setMessage(null);
+
+    console.log(value);
+
+    try {
+      await DeliveryService.addDelivery(destination, arrivalDate, type, Number(truck), Number(driver), parseCurrencyToNumber(value)); 
+      setMessage("Entrega adicionada com sucesso");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const formatCurrency = (value: string) => {
@@ -56,6 +74,12 @@ export default function DeliveriesPage() {
 
     return formattedValue;
   };
+
+  function parseCurrencyToNumber(value: string): number {
+    const cleanedValue = value.replace("R$", "").replace(/\s+/g, "").replace(",", ".");
+    const numericValue = parseFloat(cleanedValue);
+    return isNaN(numericValue) ? 0 : numericValue;
+  }
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
@@ -87,9 +111,9 @@ export default function DeliveriesPage() {
     setMessage(null);
 
     try {
-      const data = await DriverService.fetchDrivers(); // Usando o serviço
+      const data = await DriverService.fetchDrivers();
       const driverData = data.map(
-        (driver) => new DriverModel(driver.driverID, driver.name) // Criando instâncias de TruckModel
+        (driver) => new DriverModel(driver.driverID, driver.name)
       );
       setDrivers(driverData);
       setMessage("Motoristas carregados com sucesso");
@@ -221,7 +245,7 @@ export default function DeliveriesPage() {
                   <option value="">Selecione o Motorista</option>
                   {drivers.map((option) => (
                     <option key={option.driverID} value={option.driverID}>
-                      {option.driverID} -{option.name}
+                      {option.driverID} - {option.name}
                     </option>
                   ))}
                 </select>
@@ -241,6 +265,7 @@ export default function DeliveriesPage() {
                 <p className="mt-4"><b>Valor total com taxas de destino:</b> {valueCalculation(destination, value)}</p>
                 <button
                   className="btn btn-primary w-20 text-center mt-3"
+                  onClick={fetchNewDelivery}
                   disabled={isLoading}
                 >
                   {isLoading ? "Carregando..." : "Enviar"}
