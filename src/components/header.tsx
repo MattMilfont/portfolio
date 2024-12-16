@@ -31,21 +31,12 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 aria-current="page"
                 href="/main"
               >
-                <b>Home</b>
+                <b><i className="bi bi-house-fill"></i> Home</b>
               </a>
             </li>
             <li className="nav-item">
               <a className="nav-link" style={{ color: "white" }} href="/trucks">
-                <b>Caminhões</b>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className="nav-link"
-                style={{ color: "white" }}
-                href="/deliveries"
-              >
-                <b>Entregas</b>
+                <b><i className="bi bi-truck"></i> Caminhões</b>
               </a>
             </li>
             <li className="nav-item">
@@ -54,7 +45,16 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 style={{ color: "white" }}
                 href="/drivers"
               >
-                <b>Motoristas</b>
+                <b><i className="bi bi-person-fill"></i> Motoristas</b>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className="nav-link"
+                style={{ color: "white" }}
+                href="/deliveries"
+              >
+                <b><i className="bi bi-box-seam-fill"></i> Entregas</b>
               </a>
             </li>
           </ul>
