@@ -47,6 +47,5 @@ export const DeliveryService = {
     } catch (err: unknown) {
       throw err instanceof Error ? err : new Error("Erro desconhecido");
     }
-  }
-  
+  },
 };

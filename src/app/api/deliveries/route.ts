@@ -20,7 +20,7 @@ export async function GET() {
 
     await connection.end();
     console.log("Conexão fechada.");
-    return NextResponse.json(rows); // Retorna os dados em JSON
+    return NextResponse.json(rows); 
   } catch (error) {
     console.error("Erro ao buscar caminhões:", error);
     return NextResponse.json(
@@ -32,10 +32,8 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    // Recebendo os dados da requisição
     const { destination, arrivalDate, type, truckID, driverID, value } = await req.json();
 
-    // Imprimindo os dados recebidos na requisição
     console.log("Dados recebidos na requisição:", {
       destination,
       arrivalDate,
@@ -45,13 +43,15 @@ export async function POST(req: Request) {
       value,
     });
 
-    if ( !driverID || !truckID|| !arrivalDate || !type  || !destination || !value) {
+    // Verificação se todos os campos foram preenchidos
+    if (!driverID || !truckID || !arrivalDate || !type || !destination || !value) {
       return NextResponse.json(
         { error: "Todos os campos são obrigatórios." },
         { status: 400 }
       );
     }
 
+    // Conectando ao banco de dados
     console.log("Iniciando conexão com o banco de dados...");
     const connection = await mysql.createConnection({
       host: "localhost",
@@ -60,7 +60,58 @@ export async function POST(req: Request) {
       database: "desafio_pm",
     });
 
-    console.log("Conexão bem-sucedida! Executando consulta...");
+    console.log("Conexão bem-sucedida! Executando consultas...");
+
+    // Definindo o ano e mês para uso nas consultas
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const yearMonth = `${year}-${month}`;
+
+    // Verificando se o caminhão já está em outra entrega no mês
+    const [truckDeliveries] = await connection.execute(`
+      SELECT * FROM deliveries
+      WHERE truckID = ? AND arrivalDate LIKE ?
+    `, [truckID, `${yearMonth}%`]);
+
+    if (Array.isArray(truckDeliveries) && truckDeliveries.length > 0) {
+      return NextResponse.json(
+        { error: "O caminhão já está em outra entrega nesse mês." },
+        { status: 400 }
+      );
+    }
+
+    // Verificando se o caminhão já fez 4 entregas no mês
+    const [truckDeliveriesCount] = await connection.execute(`
+      SELECT COUNT(*) AS deliveryCount FROM deliveries
+      WHERE truckID = ? AND arrivalDate LIKE ?
+    `, [truckID, `${yearMonth}%`]);
+
+    // Aqui, o retorno será do tipo RowDataPacket, que é um objeto
+    if (Array.isArray(truckDeliveriesCount) && truckDeliveriesCount[0]) {
+      const count = (truckDeliveriesCount[0] as any).deliveryCount; // Usando 'as any' para acessar a propriedade corretamente
+      if (count >= 4) {
+        return NextResponse.json(
+          { error: "O caminhão já fez 4 entregas neste mês." },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Verificando se o motorista já fez uma entrega para o Nordeste no mês
+    const [driverDeliveries] = await connection.execute(`
+      SELECT * FROM deliveries
+      WHERE driverID = ? AND destination = 'Nordeste' AND arrivalDate LIKE ?
+    `, [driverID, `${yearMonth}%`]);
+
+    if (Array.isArray(driverDeliveries) && driverDeliveries.length > 0) {
+      return NextResponse.json(
+        { error: "O motorista já fez uma entrega para o Nordeste neste mês." },
+        { status: 400 }
+      );
+    }
+
+    // Inserindo a nova entrega no banco de dados
     const query = `
       INSERT INTO deliveries (driverID, truckID, departureDate, arrivalDate, type, destination, value)
       VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -76,14 +127,10 @@ export async function POST(req: Request) {
       correctedValue = correctedValue * 1.3;
     }
 
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0'); // Mês começa em 0, então adiciona 1
-    const day = String(today.getDate()).padStart(2, '0'); // Adiciona 0 à esquerda se o dia for menor que 10
+    // Calculando a data de partida
+    const departureDate = `${year}-${month}-${String(today.getDate()).padStart(2, '0')}`;
 
-    const departureDate = `${year}-${month}-${day}`;
-
-    const values = [ driverID, truckID, departureDate, arrivalDate, type, destination, correctedValue];
+    const values = [driverID, truckID, departureDate, arrivalDate, type, destination, correctedValue];
 
     const [result] = await connection.execute(query, values);
 
@@ -92,6 +139,7 @@ export async function POST(req: Request) {
     await connection.end();
     console.log("Conexão fechada.");
 
+    // Retornando a resposta de sucesso
     return NextResponse.json(
       { message: "Entrega adicionada com sucesso!" },
       { status: 201 }
@@ -105,4 +153,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
