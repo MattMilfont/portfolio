@@ -6,7 +6,7 @@ import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 
 import Header from "@/components/header";
 import { DeliveryService } from "@/services/DeliveryService";
-import { destinationOptions, formatDate, formatFloatToCurrency, typeOptions } from "@/controllers/deliveriesController";
+import { formatDate, formatFloatToCurrency } from "@/controllers/deliveriesController";
 
 export default function MainPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
@@ -27,9 +27,9 @@ export default function MainPage() {
   
       try {
         await DeliveryService.updateDelivery(deliveryID, arrivalDate); 
+        fetchDeliveries();
         setMessage("Entrega editada com sucesso");
         setIsEditing(0);
-        fetchDeliveries();
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : "Erro desconhecido");
       } finally {
@@ -75,7 +75,6 @@ export default function MainPage() {
           )
       );
       setDeliveries(deliveriesData);
-      setMessage("Entregas carregadas com sucesso");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Erro desconhecido");
@@ -106,8 +105,24 @@ export default function MainPage() {
           <p><i className="bi bi-cash-stack"></i> - Carga Valiosa (Acima de 30k)</p>
           <p><i className="bi bi-lock-fill"></i> - Carga com Seguro</p>
           {isLoading && <p>Carregando...</p>}
-          {message && <p style={{ color: "green" }}>{message}</p>}
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {message && 
+            <div className="row">
+              <div className="col-md-8 offset-md-2">
+                <div className="alert alert-success text-center">
+                  <p style={{ color: "green" }}>{message}</p>
+                </div>
+              </div>
+            </div>
+          }
+          {error && 
+            <div className="row">
+              <div className="col-md-8 offset-md-2 mt-3 mb-3">
+                <div className="alert alert-danger text-center">
+                  <p style={{ color: "red" }}>{error}</p>
+                </div>
+              </div>
+            </div>
+          }
         </div>
         <div className="col-md-10 offset-md-1">
           <table className="table table-striped">
