@@ -17,12 +17,50 @@ export default function DeliveriesPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [destination, setDestination] = useState("");
+  const [value, setValue] = useState("");
   const [arrivalDate, setArrivalDate] = useState("");
   const [type, setType] = useState("");
   const [truck, setTruck] = useState("");
   const [driver, setDriver] = useState("");
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
+
+  const valueCalculation = (destination: string, value: string) => {
+    let numericValue = Number(value.replace(/\D/g, ""));
+
+    if(destination == "Amazônia"){
+      numericValue = numericValue * 1.2;
+    }
+    else if(destination == "Argentina"){
+      numericValue = numericValue * 1.4;
+    }
+    else if(destination == "Argentina"){
+      numericValue = numericValue * 1.3;
+    }
+
+    const formattedValue = (Number(numericValue) / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    return formattedValue;
+  };
+
+  const formatCurrency = (value: string) => {
+    const numericValue = value.replace(/\D/g, "");
+
+    const formattedValue = (Number(numericValue) / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    return formattedValue;
+  };
+
+  const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value;
+    setValue(formatCurrency(rawValue));
+  };
 
   const fetchTrucks = async () => {
     setIsLoading(true);
@@ -67,7 +105,7 @@ export default function DeliveriesPage() {
     fetchDrivers();
   }, []);
 
-  const typeOptions = ["Eletronicos", "Combustivel", "Comum"];
+  const typeOptions = ["Eletrônicos", "Combustível", "Comum"];
 
   const destinationOptions = [
     "Nordeste",
@@ -75,6 +113,8 @@ export default function DeliveriesPage() {
     "Sudeste",
     "Sul",
     "Centro-oeste",
+    "Amazônia",
+    "Argentina",
   ];
 
   return (
@@ -131,7 +171,7 @@ export default function DeliveriesPage() {
                   className="form-control mt-1"
                   id="arrivalDate"
                   value={arrivalDate}
-                  onChange={(e) => setDestination(e.target.value)}
+                  onChange={(e) => setArrivalDate(e.target.value)}
                   required
                 />
                 <label htmlFor="text" className="form-label mt-1">
@@ -141,7 +181,7 @@ export default function DeliveriesPage() {
                   className="form-control mt-1"
                   id="type"
                   value={type}
-                  onChange={(e) => setDestination(e.target.value)}
+                  onChange={(e) => setType(e.target.value)}
                   required
                 >
                   <option value="">Selecione o Tipo de Carga</option>
@@ -158,7 +198,7 @@ export default function DeliveriesPage() {
                   className="form-control mt-1"
                   id="truck"
                   value={truck}
-                  onChange={(e) => setDestination(e.target.value)}
+                  onChange={(e) => setTruck(e.target.value)}
                   required
                 >
                   <option value="">Selecione o Caminhão</option>
@@ -175,7 +215,7 @@ export default function DeliveriesPage() {
                   className="form-control mt-1"
                   id="driver"
                   value={driver}
-                  onChange={(e) => setDestination(e.target.value)}
+                  onChange={(e) => setDriver(e.target.value)}
                   required
                 >
                   <option value="">Selecione o Motorista</option>
@@ -185,7 +225,20 @@ export default function DeliveriesPage() {
                     </option>
                   ))}
                 </select>
+                <label htmlFor="text" className="form-label mt-1">
+                  <b>Valor do Frete</b>
+                </label>
+                <input
+                  type="text"
+                  className="form-control mt-1"
+                  id="value"
+                  value={value}
+                  onChange={handleValueChange}
+                  placeholder="R$ 0,00"
+                  required
+                />
 
+                <p className="mt-4"><b>Valor total com taxas de destino:</b> {valueCalculation(destination, value)}</p>
                 <button
                   className="btn btn-primary w-20 text-center mt-3"
                   disabled={isLoading}
