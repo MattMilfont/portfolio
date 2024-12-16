@@ -56,7 +56,6 @@ export default function TrucksPage() {
         (truck) => new TruckModel(truck.truckID, truck.model) 
       );
       setTrucks(trucksData);
-      setMessage("Caminhões carregados com sucesso");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
@@ -77,11 +76,12 @@ export default function TrucksPage() {
           style={{ paddingTop: "2%" }}
         >
           <div className="card">
+            <div className="card-header bg-primary">
+              <h2 className="m-2 text-light">Caminhões</h2>
+            </div>
             <div className="m-3">
-              <h2>Caminhões</h2>
               <p>
-                Nessa seção de caminhões você pode adicionar novos modelos,
-                editar aqueles que já tem e deletar os caminhões que não estão
+                Nessa seção de caminhões você pode adicionar novos modelos e deletar os caminhões que não estão
                 mais na frota.
               </p>
             </div>
@@ -117,10 +117,31 @@ export default function TrucksPage() {
           </div>
           <div className="col-md-4">
             <div className="card">
-              <div className="m-3">
-                <h5>
+              <div className="card-header bg-primary">
+                <h5 className="m-2 text-light">
                   <b>Criar novo Caminhão</b>
                 </h5>
+              </div>
+              <div className="m-3">
+              {isLoading && <p>Carregando...</p>}
+              {message && 
+                <div className="row mt-4">
+                  <div className="col-md-12">
+                    <div className="alert alert-success text-center">
+                      <p style={{ color: "green" }}>{message}</p>
+                    </div>
+                  </div>
+                </div>
+              }
+              {error && 
+                <div className="row">
+                  <div className="col-md-12">
+                    <div className="alert alert-danger text-center">
+                      <p style={{ color: "red" }}>{error}</p>
+                    </div>
+                  </div>
+                </div>
+              }
                 <label htmlFor="text" className="form-label">
                   <b>Modelo do caminhão</b>
                 </label>
