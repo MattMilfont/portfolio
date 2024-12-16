@@ -53,7 +53,8 @@ export default function MainPage() {
             delivery.name,
             delivery.model,
             delivery.type,
-            delivery.value
+            delivery.value,
+            delivery.secure,
           )
       );
       setDeliveries(deliveriesData);
@@ -86,7 +87,7 @@ export default function MainPage() {
           <p><b>Legenda do ícones</b></p>
           <p><i className="bi bi-fire"></i> - Carga Perigosa (Combustível)</p>
           <p><i className="bi bi-cash-stack"></i> - Carga Valiosa (Acima de 30k)</p>
-          <p><i className="bi bi-file-earmark-lock"></i> - Carga com Seguro</p>
+          <p><i className="bi bi-lock-fill"></i> - Carga com Seguro</p>
           {isLoading && <p>Carregando...</p>}
           {message && <p style={{ color: "green" }}>{message}</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
@@ -109,7 +110,11 @@ export default function MainPage() {
             <tbody className="text-center">
               {deliveries.map((delivery) => (
                 <tr key={delivery.deliveryID}>
-                  <td><i className="bi bi-fire"></i> <i className="bi bi-cash-stack"></i> <i className="bi bi-file-earmark-lock"></i></td>
+                  <td>
+                    {delivery.type == "Combustível" && <i className="bi bi-fire m-2"></i> } 
+                    {delivery.value >= 30000 && <i className="bi bi-cash-stack m-2"></i> }
+                    {delivery.secure == 1 && <i className="bi bi-lock-fill m-2"></i>}
+                  </td>
                   <td>{delivery.deliveryID}</td>
                   <td>{delivery.destination}</td>
                   <td>{delivery.type}</td>
