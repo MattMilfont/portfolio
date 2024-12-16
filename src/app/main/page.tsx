@@ -14,8 +14,6 @@ export default function MainPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(0);
-  const [type, setType] = useState("");
-  const [destination, setDestination] = useState("");
   const [arrivalDate, setArrivalDate] = useState("");
 
   const handleEditing = (deliveryID: number) => {
@@ -28,7 +26,7 @@ export default function MainPage() {
       setMessage(null);
   
       try {
-        await DeliveryService.updateDelivery(deliveryID, destination, arrivalDate, type); 
+        await DeliveryService.updateDelivery(deliveryID, arrivalDate); 
         setMessage("Entrega editada com sucesso");
         setIsEditing(0);
         fetchDeliveries();
@@ -136,38 +134,8 @@ export default function MainPage() {
                     {delivery.secure == 1 && <i className="bi bi-lock-fill m-2"></i>}
                   </td>
                   <td>{delivery.deliveryID}</td>
-                  <td>
-                      <select
-                        className="form-control mt-1"
-                        id="destination"
-                        value={destination}
-                        onChange={(e) => setDestination(e.target.value)}
-                        required
-                      >
-                        <option value="">Selecione o Destino</option>
-                        {destinationOptions.map((option, index) => (
-                          <option key={index} value={option}>
-                            {option}
-                          </option>
-                        ))}
-                      </select>
-                  </td>
-                  <td>
-                    <select
-                      className="form-control mt-1"
-                      id="type"
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
-                      required
-                    >
-                      <option value="">Selecione o Tipo de Carga</option>
-                      {typeOptions.map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
+                  <td>{delivery.destination}</td>
+                  <td>{delivery.type}</td>
                   <td>
                     <input
                       type="date"

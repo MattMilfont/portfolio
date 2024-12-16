@@ -234,18 +234,27 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const { deliveryID, destination, arrivalDate, type } = await req.json();
+    const { deliveryID, arrivalDate } = await req.json();
 
     console.log("Dados recebidos para atualização:", {
       deliveryID,
-      destination,
       arrivalDate,
-      type,
     });
 
-    if (!deliveryID || !destination || !arrivalDate || !type) {
+    if (!deliveryID || !arrivalDate) {
       return NextResponse.json(
         { error: "Todos os campos são obrigatórios." },
+        { status: 400 }
+      );
+    }
+
+    // Verifica se a data de chegada é maior que a data atual
+    const currentDate = new Date();
+    const arrival = new Date(arrivalDate);
+
+    if (arrival <= currentDate) {
+      return NextResponse.json(
+        { error: "A data de chegada deve ser posterior à data atual." },
         { status: 400 }
       );
     }
@@ -262,11 +271,11 @@ export async function PUT(req: Request) {
 
     const query = `
       UPDATE deliveries
-      SET destination = ?, arrivalDate = ?, type = ?
+      SET arrivalDate = ?
       WHERE deliveryID = ?
     `;
 
-    const values = [destination, arrivalDate, type, deliveryID];
+    const values = [arrivalDate, deliveryID];
 
     const [result] = await connection.execute(query, values);
 

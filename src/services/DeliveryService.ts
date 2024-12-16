@@ -66,9 +66,7 @@ export const DeliveryService = {
 
   async updateDelivery(
     deliveryID: number,
-    destination: string,
     arrivalDate: string,
-    type: string,
   ): Promise<void> {
     try {
       const response = await fetch(`${API_URL}?deliveryID=${deliveryID}`, {
@@ -77,9 +75,7 @@ export const DeliveryService = {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          destination,
           arrivalDate,
-          type,
           deliveryID,
         }),
       });
