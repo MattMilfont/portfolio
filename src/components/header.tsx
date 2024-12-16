@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" style={{ color: "white" }} href="#">
+              <a className="nav-link" style={{ color: "white" }} href="/deliveries">
                 <b>Entregas</b>
               </a>
             </li>
