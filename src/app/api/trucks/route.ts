@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import mysql from "mysql2/promise";
 
-// Função GET para buscar os caminhões
 export async function GET() {
   try {
     console.log("Iniciando conexão com o banco de dados...");
@@ -18,7 +17,7 @@ export async function GET() {
 
     await connection.end();
     console.log("Conexão fechada.");
-    return NextResponse.json(rows); // Retorna os dados em JSON
+    return NextResponse.json(rows); 
   } catch (error) {
     console.error("Erro ao buscar caminhões:", error);
     return NextResponse.json(
@@ -30,11 +29,9 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    // Lê o corpo da requisição para obter os dados do caminhão
     const { model } = await req.json();
     console.log(model);
 
-    // Validação básica
     if (!model) {
       return NextResponse.json(
         { error: "É obrigatório colocar o modelo" },
@@ -62,7 +59,6 @@ export async function POST(req: Request) {
     await connection.end();
     console.log("Conexão fechada.");
 
-    // Retorna uma resposta com sucesso
     return NextResponse.json(
       { message: "Caminhão adicionado com sucesso!" },
       { status: 201 }
@@ -78,11 +74,9 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    // Obtém o ID do caminhão a partir da URL
     const { searchParams } = new URL(req.url);
     const truckId = searchParams.get("truckID");
 
-    // Validação do ID
     if (!truckId) {
       return NextResponse.json(
         { error: "ID do caminhão é obrigatório" },
@@ -102,10 +96,8 @@ export async function DELETE(req: Request) {
     const query = `DELETE FROM trucks WHERE truckID = ?`;
     const values = [truckId];
 
-    // Executando a query DELETE
     const [result] = await connection.execute(query, values);
 
-    // Verificando se a linha foi afetada
     if ((result as any).affectedRows === 0) {
       return NextResponse.json(
         { error: "Caminhão não encontrado" },
@@ -116,7 +108,6 @@ export async function DELETE(req: Request) {
     await connection.end();
     console.log("Conexão fechada.");
 
-    // Retorna uma resposta de sucesso
     return NextResponse.json(
       { message: "Caminhão excluído com sucesso!" },
       { status: 200 }

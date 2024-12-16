@@ -18,7 +18,7 @@ export async function GET() {
 
     await connection.end();
     console.log("Conexão fechada.");
-    return NextResponse.json(rows); // Retorna os dados em JSON
+    return NextResponse.json(rows);
   } catch (error) {
     console.error("Erro ao buscar motoristas:", error);
     return NextResponse.json(
@@ -30,10 +30,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    // Lê o corpo da requisição para obter os dados do caminhão
     const { name } = await req.json();
-
-    // Validação básica
     if (!name) {
       return NextResponse.json(
         { error: "É obrigatório colocar o nome" },
@@ -61,7 +58,6 @@ export async function POST(req: Request) {
     await connection.end();
     console.log("Conexão fechada.");
 
-    // Retorna uma resposta com sucesso
     return NextResponse.json(
       { message: "Motorista adicionado com sucesso!" },
       { status: 201 }
@@ -77,11 +73,9 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    // Obtém o ID do caminhão a partir da URL
     const { searchParams } = new URL(req.url);
     const driverId = searchParams.get("driverID");
 
-    // Validação do ID
     if (!driverId) {
       return NextResponse.json(
         { error: "ID do motorista é obrigatório" },
@@ -101,10 +95,8 @@ export async function DELETE(req: Request) {
     const query = `DELETE FROM drivers WHERE driverId = ?`;
     const values = [driverId];
 
-    // Executando a query DELETE
     const [result] = await connection.execute(query, values);
 
-    // Verificando se a linha foi afetada
     if ((result as any).affectedRows === 0) {
       return NextResponse.json(
         { error: "Caminhão não encontrado" },
@@ -115,7 +107,6 @@ export async function DELETE(req: Request) {
     await connection.end();
     console.log("Conexão fechada.");
 
-    // Retorna uma resposta de sucesso
     return NextResponse.json(
       { message: "Motorista excluído com sucesso!" },
       { status: 200 }

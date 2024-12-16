@@ -24,7 +24,7 @@ export async function GET() {
 
     await connection.end();
     console.log("Conexão fechada.");
-    return NextResponse.json(rows); // Retorna os dados em JSON
+    return NextResponse.json(rows);
   } catch (error) {
     console.error("Erro ao buscar usuários:", error);
     return NextResponse.json(
@@ -55,7 +55,6 @@ export async function POST(request: Request) {
       database: "desafio_pm",
     });
 
-    // Busca o usuário pelo email
     const query = "SELECT * FROM users WHERE email = ?";
     const [rows] = await connection.execute<RowDataPacket[]>(query, [email]);
     await connection.end();
@@ -67,12 +66,12 @@ export async function POST(request: Request) {
       );
     }
 
-    const user = rows[0]; // Primeiro usuário encontrado
+    const user = rows[0];
 
     if (user["password"] == password) {
       return NextResponse.json({
         message: "Login Efetuado com sucesso",
-        userId: user.insertId, // OkPacket contém o campo insertId
+        userId: user.insertId, 
       });
     } else {
       throw new PasswordError("Senha incorreta, tente novamente!");

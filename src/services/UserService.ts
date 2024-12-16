@@ -8,7 +8,6 @@ export const getUsers = async (): Promise<UserModel[]> => {
     throw new Error("Erro ao buscar usuários");
   }
 
-  // Tipar explicitamente a resposta da API
   const users: User[] = await response.json();
 
   return users.map(

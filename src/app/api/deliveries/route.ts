@@ -94,7 +94,6 @@ export async function POST(req: Request) {
       secure,
     });
 
-    // Verificação se todos os campos foram preenchidos
     if (!driverID || !truckID || !arrivalDate || !type || !destination || !value) {
       return NextResponse.json(
         { error: "Todos os campos são obrigatórios." },
@@ -102,7 +101,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verificação se a data de chegada é menor que a data de saída
     const today = new Date();
     const departureDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
@@ -116,7 +114,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Conectando ao banco de dados
     console.log("Iniciando conexão com o banco de dados...");
     const connection = await mysql.createConnection({
       host: "localhost",
@@ -127,7 +124,6 @@ export async function POST(req: Request) {
 
     console.log("Conexão bem-sucedida! Executando consultas...");
 
-    // Verificando se o caminhão já está em outra entrega no mês, considerando tanto a data de saída quanto a data de chegada
     const [truckDeliveries] = await connection.execute(`
       SELECT * FROM deliveries
       WHERE truckID = ? AND (
@@ -135,11 +131,9 @@ export async function POST(req: Request) {
       )
     `, [
       truckID,
-      arrivalDate,  // Data de chegada da nova entrega
-      arrivalDate,  // Data de chegada da nova entrega
+      arrivalDate, 
     ]);
 
-    // Se o caminhão já tiver uma entrega no mês atual
     if (Array.isArray(truckDeliveries) && truckDeliveries.length > 0) {
       return NextResponse.json(
         { error: "O caminhão já está em outra entrega nesse período." },
@@ -147,7 +141,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verificando se o caminhão já fez 4 entregas no mês
     const [truckDeliveriesCount] = await connection.execute(`
       SELECT COUNT(*) AS deliveryCount FROM deliveries
       WHERE truckID = ? AND arrivalDate LIKE ?
@@ -163,13 +156,11 @@ export async function POST(req: Request) {
       }
     }
 
-    // Verificando se o motorista já está alocado em outra entrega na data de saída
     const [driverDeliveries] = await connection.execute(`
       SELECT * FROM deliveries
       WHERE driverID = ? AND departureDate = ?
     `, [driverID, departureDate]);
 
-    // Se o motorista já estiver em uma entrega no mesmo dia
     if (Array.isArray(driverDeliveries) && driverDeliveries.length > 0) {
       return NextResponse.json(
         { error: "O motorista já está alocado em outra entrega na data de saída." },
@@ -177,13 +168,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // Verificando se o motorista já fez uma entrega para o Nordeste no mês atual
     const [driverDeliveriesForNordeste] = await connection.execute(`
       SELECT * FROM deliveries
       WHERE driverID = ? AND destination = 'Nordeste' AND arrivalDate LIKE ?
     `, [driverID, `${departureDate.slice(0, 7)}%`]);
 
-    // Se o motorista já fez uma entrega para o Nordeste, ele não pode fazer outra entrega para essa região
     if (destination === "Nordeste" && Array.isArray(driverDeliveriesForNordeste) && driverDeliveriesForNordeste.length > 0) {
       return NextResponse.json(
         { error: "O motorista já fez uma entrega para o Nordeste neste mês." },
@@ -191,7 +180,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Inserindo a nova entrega no banco de dados
     const query = `
       INSERT INTO deliveries (driverID, truckID, departureDate, arrivalDate, type, destination, value, secure)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -199,7 +187,6 @@ export async function POST(req: Request) {
 
     let correctedValue = value;
 
-    // Aplicando os ajustes de valor dependendo da região de destino
     if (destination === "Amazônia") {
       correctedValue = correctedValue * 1.2;
     } else if (destination === "Argentina") {
@@ -217,7 +204,6 @@ export async function POST(req: Request) {
     await connection.end();
     console.log("Conexão fechada.");
 
-    // Retornando a resposta de sucesso
     return NextResponse.json(
       { message: "Entrega adicionada com sucesso!" },
       { status: 201 }
@@ -248,7 +234,6 @@ export async function PUT(req: Request) {
       );
     }
 
-    // Verifica se a data de chegada é maior que a data atual
     const currentDate = new Date();
     const arrival = new Date(arrivalDate);
 

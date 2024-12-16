@@ -7,7 +7,7 @@ import Header from "@/components/header";
 import { Truck, TruckModel } from "@/models/TruckModel";
 import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 
-import { TruckService } from "@/services/TruckService"; // Importando o serviço
+import { TruckService } from "@/services/TruckService"; 
 import { DriverService } from "@/services/DriverService";
 import { Driver, DriverModel } from "@/models/DriverModel";
 import { DeliveryService } from "@/services/DeliveryService";
@@ -55,9 +55,9 @@ export default function DeliveriesPage() {
     setMessage(null);
 
     try {
-      const data = await TruckService.fetchTrucks(); // Usando o serviço
+      const data = await TruckService.fetchTrucks();
       const trucksData = data.map(
-        (truck) => new TruckModel(truck.truckID, truck.model) // Criando instâncias de TruckModel
+        (truck) => new TruckModel(truck.truckID, truck.model)
       );
       setTrucks(trucksData);
     } catch (err: unknown) {
