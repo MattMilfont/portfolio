@@ -48,4 +48,17 @@ export const DeliveryService = {
       throw err instanceof Error ? err : new Error("Erro desconhecido");
     }
   },
+
+  async deleteDelivery(id: number): Promise<void> {
+    try {
+      const response = await fetch(`${API_URL}?deliveryID=${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Erro ao excluir entrega");
+      }
+    } catch (err: unknown) {
+      throw err instanceof Error ? err : new Error("Erro desconhecido");
+    }
+  },
 };

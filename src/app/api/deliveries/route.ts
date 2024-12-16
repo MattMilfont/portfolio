@@ -30,6 +30,56 @@ export async function GET() {
   }
 }
 
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const deliveryID = searchParams.get("deliveryID");
+
+    if (!deliveryID) {
+      return NextResponse.json(
+        { error: "ID da entrega é obrigatório" },
+        { status: 400 }
+      );
+    }
+
+    console.log("Iniciando conexão com o banco de dados...");
+    const connection = await mysql.createConnection({
+      host: "localhost",
+      user: "root",
+      password: "",
+      database: "desafio_pm",
+    });
+
+    console.log("Conexão bem-sucedida! Executando consulta...");
+    const query = `DELETE FROM deliveries WHERE deliveryID = ?`;
+    const values = [deliveryID];
+
+    const [result] = await connection.execute(query, values);
+
+    if ((result as any).affectedRows === 0) {
+      return NextResponse.json(
+        { error: "Entrega não encontrada" },
+        { status: 404 }
+      );
+    }
+
+    await connection.end();
+    console.log("Conexão fechada.");
+
+    return NextResponse.json(
+      { message: "Entrega excluída com sucesso!" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Erro ao excluir entrega:", error);
+    return NextResponse.json(
+      { error: "Erro ao excluir entrega" },
+      { status: 500 }
+    );
+  }
+}
+
+
 export async function POST(req: Request) {
   try {
     const { destination, arrivalDate, type, truckID, driverID, value } = await req.json();

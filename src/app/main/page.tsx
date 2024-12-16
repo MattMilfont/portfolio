@@ -13,6 +13,21 @@ export default function MainPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const fetchDeleteDelivery = async (id: number) => {
+      setIsLoading(true);
+      setError(null);
+      setMessage(null);
+      try {
+        await DeliveryService.deleteDelivery(id);
+        fetchDeliveries();
+        setMessage("Entrega excluída com sucesso");
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Erro desconhecido");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
   const formatCurrency = (value: string): string => {
     const numericValue = value.replace(".", ",");
   
@@ -80,7 +95,7 @@ export default function MainPage() {
         </div>
         <div className="col-md-10 offset-md-1">
           <table className="table table-striped">
-            <thead>
+            <thead className="text-center">
               <tr>
                 <th>ID da entrega</th>
                 <th>Destino</th>
@@ -89,9 +104,10 @@ export default function MainPage() {
                 <th>Motorista</th>
                 <th>Caminhão</th>
                 <th>Valor</th>
+                <th>Ações</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="text-center">
               {deliveries.map((delivery) => (
                 <tr key={delivery.deliveryID}>
                   <td>{delivery.deliveryID}</td>
@@ -101,6 +117,7 @@ export default function MainPage() {
                   <td>{delivery.name}</td>
                   <td>{delivery.model}</td>
                   <td>{formatCurrency(String(delivery.value))}</td>
+                  <td><button className="btn btn-danger" onClick={() => fetchDeleteDelivery(delivery.deliveryID)}>X</button></td>
                 </tr>
               ))}
             </tbody>
