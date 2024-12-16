@@ -10,11 +10,36 @@ interface Truck {
 }
 
 export default function TrucksPage() {
-  const [newTruckModel, setNewTruck] = useState("");
+  const [model, setNewTruck] = useState("");
+  const [truckID, setDeleteTruck] = useState(Number);
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const fetchDeleteTruck = async (id: number) => {
+    setIsLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const response = await fetch(`/api/trucks?truckID=${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro desconhecido");
+      }
+      const data = await response.json();
+      fetchTrucks();
+      console.log("Caminhão excluído com sucesso:", data.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) setError(err.message);
+      else setError("Erro desconhecido");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchNewTruck = async () => {
     setIsLoading(true);
@@ -22,13 +47,15 @@ export default function TrucksPage() {
     setMessage(null);
 
     try {
-      const response = await fetch("/api/users", {
+      const response = await fetch("/api/trucks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ newTruckModel }),
+        body: JSON.stringify({ model }),
       });
+      fetchTrucks();
+      setMessage("Caminhão adicionado com sucesso");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Erro desconhecido");
@@ -84,11 +111,11 @@ export default function TrucksPage() {
             </div>
           </div>
         </div>
-        <div className="row mt-4">
+        <div className="row mt-4 mb-4">
           <div className="col-md-6 offset-md-1">
-            <table className="table table-striped">
+            <table className="table table-striped ">
               <thead>
-                <tr>
+                <tr className="text-center">
                   <th>ID do Caminhão</th>
                   <th>Modelo do Caminhão</th>
                   <th>Ações</th>
@@ -96,10 +123,17 @@ export default function TrucksPage() {
               </thead>
               <tbody>
                 {trucks.map((truck) => (
-                  <tr key={truck.truckID}>
+                  <tr key={truck.truckID} className="text-center">
                     <td>{truck.truckID}</td>
                     <td>{truck.model}</td>
-                    <td></td>
+                    <td>
+                      <a
+                        className="btn btn-danger"
+                        onClick={() => fetchDeleteTruck(truck.truckID)}
+                      >
+                        X
+                      </a>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -118,7 +152,7 @@ export default function TrucksPage() {
                   type="text"
                   className="form-control mt-1"
                   id="modelNewTruck"
-                  value={newTruckModel}
+                  value={model}
                   onChange={(e) => setNewTruck(e.target.value)}
                   required
                 />
@@ -128,6 +162,7 @@ export default function TrucksPage() {
                   disabled={isLoading}
                 >
                   {isLoading ? "Carregando..." : "Enviar"}
+                  {}
                 </button>
               </div>
             </div>

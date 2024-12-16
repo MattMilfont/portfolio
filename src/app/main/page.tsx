@@ -52,7 +52,7 @@ export default function MainPage() {
       <Header title="Mojave Express" />
       <div className="container-fluid">
         <div
-          className="col-md-8 offset-md-2 mt-10"
+          className="col-md-10 offset-md-1 mt-10"
           style={{ paddingTop: "2%" }}
         >
           <h1>Bem-vindo ao Mojave Express Manager</h1>
@@ -63,7 +63,8 @@ export default function MainPage() {
           {isLoading && <p>Carregando...</p>}
           {message && <p style={{ color: "green" }}>{message}</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
-
+        </div>
+        <div className="col-md-10 offset-md-1">
           <table className="table table-striped">
             <thead>
               <tr>
