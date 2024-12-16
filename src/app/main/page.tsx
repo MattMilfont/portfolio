@@ -13,6 +13,15 @@ export default function MainPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString); 
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear(); 
+  
+    return `${day}/${month}/${year}`; 
+  }
+
   const fetchDeleteDelivery = async (id: number) => {
       setIsLoading(true);
       setError(null);
@@ -118,7 +127,7 @@ export default function MainPage() {
                   <td>{delivery.deliveryID}</td>
                   <td>{delivery.destination}</td>
                   <td>{delivery.type}</td>
-                  <td>{delivery.arrivalDate}</td>
+                  <td>{formatDate(delivery.arrivalDate)}</td>
                   <td>{delivery.name}</td>
                   <td>{delivery.model}</td>
                   <td>{formatFloatToCurrency(delivery.value)}</td>
