@@ -48,7 +48,7 @@ export const valueCalculation = (destination: string, value: string) => {
     export const typeOptions = ["Eletrônicos", "Combustível", "Comum"];
 
     export const secureOptions = ["Não", "Sim"];
-    
+
     export const destinationOptions = [
       "Nordeste",
       "Sudeste",
@@ -57,3 +57,10 @@ export const valueCalculation = (destination: string, value: string) => {
       "Amazônia",
       "Argentina",
     ];
+
+    export const formatFloatToCurrency = (value: number): string => {
+        return value.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        });
+      };

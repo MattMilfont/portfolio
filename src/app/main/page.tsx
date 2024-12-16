@@ -6,21 +6,13 @@ import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 
 import Header from "@/components/header";
 import { DeliveryService } from "@/services/DeliveryService";
+import { formatDate, formatFloatToCurrency } from "@/controllers/deliveriesController";
 
 export default function MainPage() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString); 
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear(); 
-  
-    return `${day}/${month}/${year}`; 
-  }
 
   const fetchDeleteDelivery = async (id: number) => {
       setIsLoading(true);
@@ -37,13 +29,6 @@ export default function MainPage() {
       }
     };
 
-    const formatFloatToCurrency = (value: number): string => {
-      return value.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      });
-    };
-  
   const fetchDeliveries = async () => {
     setIsLoading(true);
     setError(null);
