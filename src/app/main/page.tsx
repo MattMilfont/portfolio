@@ -13,6 +13,19 @@ export default function MainPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const formatCurrency = (value: string): string => {
+    const numericValue = value.replace(/\D/g, "");
+  
+    const valueInCents = Number(numericValue) / 100;
+  
+    const formattedValue = valueInCents.toFixed(2).replace(".", ",");
+  
+    return `R$ ${formattedValue}`;
+  };
+  
+  const formatted = formatCurrency("54000");
+  console.log(formatted);
+
   const fetchDeliveries = async () => {
     setIsLoading(true);
     setError(null);
@@ -30,7 +43,8 @@ export default function MainPage() {
             delivery.arrivalDate,
             delivery.name,
             delivery.model,
-            delivery.type
+            delivery.type,
+            delivery.value
           )
       );
       setDeliveries(deliveriesData);
@@ -43,10 +57,9 @@ export default function MainPage() {
     }
   };
 
-  // Executar fetchDeliveries no carregamento da página
   useEffect(() => {
     fetchDeliveries();
-  }, []); // O array vazio faz o useEffect ser executado apenas uma vez
+  }, []); 
 
   return (
     <div>
@@ -87,7 +100,7 @@ export default function MainPage() {
                   <td>{delivery.arrivalDate}</td>
                   <td>{delivery.name}</td>
                   <td>{delivery.model}</td>
-                  <td>R$ 0,00</td>
+                  <td>{formatCurrency(String(delivery.value))}</td>
                 </tr>
               ))}
             </tbody>

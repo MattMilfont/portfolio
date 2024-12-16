@@ -15,7 +15,6 @@ import { DeliveryService } from "@/services/DeliveryService";
 export default function DeliveriesPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [deliveries, setDeliveries] = useState<Delivery[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [destination, setDestination] = useState("");
   const [value, setValue] = useState("");
@@ -157,9 +156,9 @@ export default function DeliveriesPage() {
                 aquelas que já foram cadastradas e deletar as entregas que estão
                 erradas.
               </p>
-              {/* {isLoading && <p>Carregando...</p>}
+              {isLoading && <p>Carregando...</p>}
               {message && <p style={{ color: "green" }}>{message}</p>}
-              {error && <p style={{ color: "red" }}>{error}</p>} */}
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ export interface Delivery {
   name: string;
   model: string;
   type: string;
+  value: string;
 }
 
 export class DeliveryModel implements Delivery {
@@ -18,6 +19,7 @@ export class DeliveryModel implements Delivery {
   name: string;
   model: string;
   type: string;
+  value: string;
 
   constructor(
     deliveryID: number,
@@ -27,7 +29,8 @@ export class DeliveryModel implements Delivery {
     arrivalDate: string,
     name: string,
     model: string,
-    type: string
+    type: string,
+    value: string
   ) {
     this.deliveryID = deliveryID;
     this.destination = destination;
@@ -37,5 +40,6 @@ export class DeliveryModel implements Delivery {
     this.name = name;
     this.model = model;
     this.type = type;
+    this.value = value;
   }
 }
