@@ -11,6 +11,7 @@ import { TruckService } from "@/services/TruckService"; // Importando o serviço
 import { DriverService } from "@/services/DriverService";
 import { Driver, DriverModel } from "@/models/DriverModel";
 import { DeliveryService } from "@/services/DeliveryService";
+import { destinationOptions, formatCurrency, formatDate, parseCurrencyToNumber, secureOptions, typeOptions, valueCalculation } from "@/controllers/deliveriesController";
 
 export default function DeliveriesPage() {
   const [message, setMessage] = useState<string | null>(null);
@@ -26,38 +27,6 @@ export default function DeliveriesPage() {
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
-
-  
-
-  const valueCalculation = (destination: string, value: string) => {
-    let numericValue = Number(value.replace(/\D/g, ""));
-
-    if(destination == "Amazônia"){
-      numericValue = numericValue * 1.2;
-    }
-    else if(destination == "Argentina"){
-      numericValue = numericValue * 1.4;
-    }
-    else if(destination == "Nordeste"){
-      numericValue = numericValue * 1.3;
-    }
-
-    const formattedValue = (Number(numericValue) / 100).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-
-    return formattedValue;
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString); 
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear(); 
-  
-    return `${day}/${month}/${year}`; 
-  }
 
   const fetchNewDelivery = async () => {
     setIsLoading(true);
@@ -84,22 +53,6 @@ export default function DeliveriesPage() {
     });
   };
 
-  const formatCurrency = (value: string) => {
-    const numericValue = value.replace(/\D/g, "");
-
-    const formattedValue = (Number(numericValue) / 100).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-
-    return formattedValue;
-  };
-
-  function parseCurrencyToNumber(value: string): number {
-    const cleanedValue = value.replace("R$", "").replace(/\s+/g, "").replace(".", "").replace(",", ".");
-    const numericValue = parseFloat(cleanedValue);
-    return isNaN(numericValue) ? 0 : numericValue;
-  }
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
@@ -181,19 +134,6 @@ export default function DeliveriesPage() {
     fetchDrivers();
     fetchDeliveries();
   }, []);
-
-  const typeOptions = ["Eletrônicos", "Combustível", "Comum"];
-  const secureOptions = ["Não", "Sim"];
-
-
-  const destinationOptions = [
-    "Nordeste",
-    "Sudeste",
-    "Sul",
-    "Centro-oeste",
-    "Amazônia",
-    "Argentina",
-  ];
 
   return (
     <div>
