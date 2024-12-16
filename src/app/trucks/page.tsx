@@ -3,15 +3,12 @@
 import { useState, useEffect } from "react";
 
 import Header from "@/components/header";
-
-interface Truck {
-  truckID: number;
-  model: string;
-}
+import { Truck, TruckModel } from "@/models/TruckModel";
+import { TruckService } from "@/services/TruckService"; // Importando o serviço
 
 export default function TrucksPage() {
   const [model, setNewTruck] = useState("");
-  const [truckID, setDeleteTruck] = useState(Number);
+  const [truckID, setDeleteTruck] = useState<number | null>(null);
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -22,20 +19,11 @@ export default function TrucksPage() {
     setError(null);
     setMessage(null);
     try {
-      const response = await fetch(`/api/trucks?truckID=${id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Erro desconhecido");
-      }
-      const data = await response.json();
+      await TruckService.deleteTruck(id); // Usando o serviço
       fetchTrucks();
-      console.log("Caminhão excluído com sucesso:", data.message);
+      setMessage("Caminhão excluído com sucesso");
     } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Erro desconhecido");
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setIsLoading(false);
     }
@@ -47,18 +35,11 @@ export default function TrucksPage() {
     setMessage(null);
 
     try {
-      const response = await fetch("/api/trucks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ model }),
-      });
+      await TruckService.addTruck(model); // Usando o serviço
       fetchTrucks();
       setMessage("Caminhão adicionado com sucesso");
     } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Erro desconhecido");
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setIsLoading(false);
     }
@@ -70,21 +51,19 @@ export default function TrucksPage() {
     setMessage(null);
 
     try {
-      const response = await fetch("/api/trucks");
-      if (!response.ok) throw new Error("Erro ao buscar entregas");
-
-      const data: Truck[] = await response.json(); // Especifica o tipo esperado
-      setTrucks(data);
+      const data = await TruckService.fetchTrucks(); // Usando o serviço
+      const trucksData = data.map(
+        (truck) => new TruckModel(truck.truckID, truck.model) // Criando instâncias de TruckModel
+      );
+      setTrucks(trucksData);
       setMessage("Caminhões carregados com sucesso");
     } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Erro desconhecido");
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Executar fetchDeliveries no carregamento da página
   useEffect(() => {
     fetchTrucks();
   }, []);
@@ -105,9 +84,6 @@ export default function TrucksPage() {
                 editar aqueles que já tem e deletar os caminhões que não estão
                 mais na frota.
               </p>
-              {/* {isLoading && <p>Carregando...</p>}
-              {message && <p style={{ color: "green" }}>{message}</p>}
-              {error && <p style={{ color: "red" }}>{error}</p>} */}
             </div>
           </div>
         </div>
@@ -162,7 +138,6 @@ export default function TrucksPage() {
                   disabled={isLoading}
                 >
                   {isLoading ? "Carregando..." : "Enviar"}
-                  {}
                 </button>
               </div>
             </div>
