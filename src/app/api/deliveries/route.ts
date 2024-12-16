@@ -82,7 +82,7 @@ export async function DELETE(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { destination, arrivalDate, type, truckID, driverID, value } = await req.json();
+    const { destination, arrivalDate, type, truckID, driverID, value, secure } = await req.json();
 
     console.log("Dados recebidos na requisição:", {
       destination,
@@ -91,6 +91,7 @@ export async function POST(req: Request) {
       truckID,
       driverID,
       value,
+      secure,
     });
 
     // Verificação se todos os campos foram preenchidos
@@ -192,8 +193,8 @@ export async function POST(req: Request) {
 
     // Inserindo a nova entrega no banco de dados
     const query = `
-      INSERT INTO deliveries (driverID, truckID, departureDate, arrivalDate, type, destination, value)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO deliveries (driverID, truckID, departureDate, arrivalDate, type, destination, value, secure)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
     let correctedValue = value;
@@ -207,7 +208,7 @@ export async function POST(req: Request) {
       correctedValue = correctedValue * 1.3;
     }
 
-    const values = [driverID, truckID, departureDate, arrivalDate, type, destination, correctedValue];
+    const values = [driverID, truckID, departureDate, arrivalDate, type, destination, correctedValue, secure];
 
     const [result] = await connection.execute(query, values);
 

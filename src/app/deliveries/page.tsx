@@ -22,8 +22,10 @@ export default function DeliveriesPage() {
   const [type, setType] = useState("");
   const [truck, setTruck] = useState("");
   const [driver, setDriver] = useState("");
+  const [secure, setSecure] = useState(0);
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
+  
 
   const valueCalculation = (destination: string, value: string) => {
     let numericValue = Number(value.replace(/\D/g, ""));
@@ -55,7 +57,7 @@ export default function DeliveriesPage() {
 
     try {
       console.log(value);
-      await DeliveryService.addDelivery(destination, arrivalDate, type, Number(truck), Number(driver), parseCurrencyToNumber(value)); 
+      await DeliveryService.addDelivery(destination, arrivalDate, type, Number(truck), Number(driver), parseCurrencyToNumber(value), Number(secure)); 
       setMessage("Entrega adicionada com sucesso");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Erro desconhecido");
@@ -130,10 +132,11 @@ export default function DeliveriesPage() {
   }, []);
 
   const typeOptions = ["Eletrônicos", "Combustível", "Comum"];
+  const secureOptions = ["Não", "Sim"];
+
 
   const destinationOptions = [
     "Nordeste",
-    "Norte",
     "Sudeste",
     "Sul",
     "Centro-oeste",
@@ -215,6 +218,29 @@ export default function DeliveriesPage() {
                     </option>
                   ))}
                 </select>
+                {type == "Eletrônicos" 
+                  && 
+                  <label htmlFor="text" className="form-label mt-1">
+                    <b>A carga possui seguro?</b>
+                  </label>
+                }
+                {type == "Eletrônicos" 
+                && 
+                  <select
+                    className="form-control mt-1"
+                    id="secure"
+                    value={secure}
+                    onChange={(e) => setSecure(Number(e.target.value))}
+                    required
+                  >
+                    <option value="">Selecione se a carga tem seguro</option>
+                    {secureOptions.map((option, index) => (
+                      <option key={index} value={index}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                }
                 <label htmlFor="text" className="form-label mt-1">
                   <b>Caminhão</b>
                 </label>

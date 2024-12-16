@@ -23,6 +23,7 @@ export const DeliveryService = {
     truckID: number,
     driverID: number,
     value: number,
+    secure: number,
   ): Promise<void> {
     try {
       const response = await fetch(API_URL, {
@@ -37,6 +38,7 @@ export const DeliveryService = {
           truckID,
           driverID,
           value,
+          secure,
         }),
       });
   
