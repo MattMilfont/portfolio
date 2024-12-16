@@ -28,19 +28,13 @@ export default function MainPage() {
       }
     };
 
-  const formatCurrency = (value: string): string => {
-    const numericValue = value.replace(".", ",");
+    const formatFloatToCurrency = (value: number): string => {
+      return value.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      });
+    };
   
-    const valueInCents = Number(numericValue);
-  
-    const formattedValue = valueInCents.toFixed(2).replace(".", ",");
-  
-    return `R$ ${formattedValue}`;
-  };
-  
-  const formatted = formatCurrency("54000");
-  console.log(formatted);
-
   const fetchDeliveries = async () => {
     setIsLoading(true);
     setError(null);
@@ -89,6 +83,10 @@ export default function MainPage() {
             Esse sistema foi feito para que você possa gerenciar a sua frota de
             caminhões de forma prática e fácil.
           </p>
+          <p><b>Legenda do ícones</b></p>
+          <p><i className="bi bi-fire"></i> - Carga Perigosa (Combustível)</p>
+          <p><i className="bi bi-cash-stack"></i> - Carga Valiosa (Acima de 30k)</p>
+          <p><i className="bi bi-file-earmark-lock"></i> - Carga com Seguro</p>
           {isLoading && <p>Carregando...</p>}
           {message && <p style={{ color: "green" }}>{message}</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
@@ -97,6 +95,7 @@ export default function MainPage() {
           <table className="table table-striped">
             <thead className="text-center">
               <tr>
+                <th></th>
                 <th>ID da entrega</th>
                 <th>Destino</th>
                 <th>Tipo</th>
@@ -110,13 +109,14 @@ export default function MainPage() {
             <tbody className="text-center">
               {deliveries.map((delivery) => (
                 <tr key={delivery.deliveryID}>
+                  <td><i className="bi bi-fire"></i> <i className="bi bi-cash-stack"></i> <i className="bi bi-file-earmark-lock"></i></td>
                   <td>{delivery.deliveryID}</td>
                   <td>{delivery.destination}</td>
                   <td>{delivery.type}</td>
                   <td>{delivery.arrivalDate}</td>
                   <td>{delivery.name}</td>
                   <td>{delivery.model}</td>
-                  <td>{formatCurrency(String(delivery.value))}</td>
+                  <td>{formatFloatToCurrency(delivery.value)}</td>
                   <td><button className="btn btn-danger" onClick={() => fetchDeleteDelivery(delivery.deliveryID)}>X</button></td>
                 </tr>
               ))}

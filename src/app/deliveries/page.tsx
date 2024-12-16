@@ -54,6 +54,7 @@ export default function DeliveriesPage() {
     console.log(value);
 
     try {
+      console.log(value);
       await DeliveryService.addDelivery(destination, arrivalDate, type, Number(truck), Number(driver), parseCurrencyToNumber(value)); 
       setMessage("Entrega adicionada com sucesso");
     } catch (err: unknown) {
@@ -75,7 +76,7 @@ export default function DeliveriesPage() {
   };
 
   function parseCurrencyToNumber(value: string): number {
-    const cleanedValue = value.replace("R$", "").replace(/\s+/g, "").replace(",", ".");
+    const cleanedValue = value.replace("R$", "").replace(/\s+/g, "").replace(".", "").replace(",", ".");
     const numericValue = parseFloat(cleanedValue);
     return isNaN(numericValue) ? 0 : numericValue;
   }
