@@ -93,7 +93,7 @@ export default function MainPage() {
       <div className="container-fluid">
         <div
           className="col-md-10 offset-md-1 mt-10"
-          style={{ paddingTop: "2%" }}
+          style={{ paddingTop: "2%", }}
         >
           <h1>Bem-vindo ao Mojave Express Manager</h1>
           <p>
@@ -124,7 +124,7 @@ export default function MainPage() {
             </div>
           }
         </div>
-        <div className="col-md-10 offset-md-1">
+        <div className="col-md-10 offset-md-1 mb-4">
           <table className="table table-striped">
             <thead className="text-center">
               <tr>

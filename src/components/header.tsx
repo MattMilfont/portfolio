@@ -9,7 +9,12 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
     <nav className="navbar navbar-expand-lg bg-primary">
       <div className="container-fluid">
         <a className="navbar-brand" href="/main" style={{ color: "white" }}>
-          <b>{title}</b>
+          <img
+              src="../assets/mojave-logo.png"
+              alt="Mojave Logo"
+              className="img-fluid"
+              style={{ maxWidth: "100px", height: "auto" }}
+            />
         </a>
         <button
           className="navbar-toggler"
