@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/header";
 import { Driver, DriverModel } from "@/models/DriverModel";
 import { DriverService } from "@/services/DriverService";
+import { useRouter } from "next/navigation";
 
 export default function DriversPage() {
   const [name, setNewDriver] = useState("");
@@ -12,6 +13,24 @@ export default function DriversPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const router = useRouter(); 
+  
+  const checkAuthentication = async () => {
+    const sessionKey = localStorage.getItem("sessionKey");  
+    
+    if (!sessionKey) {
+      router.push("/");
+    } else {
+      setIsAuthenticated(true);
+    }
+  };
+
+  
+  useEffect(() => {
+      checkAuthentication();  
+  });
 
   const fetchDeleteDriver = async (id: number) => {
     setIsLoading(true);
@@ -63,8 +82,10 @@ export default function DriversPage() {
   };
 
   useEffect(() => {
-    fetchDrivers();
-  }, []);
+    if (isAuthenticated) {
+      fetchDrivers();
+    }
+  }, [isAuthenticated]);
 
   return (
     <div>
