@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";  // Correção: importando do 'next/navigation' para garantir o funcionamento
 
 import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
-
 import Header from "@/components/header";
 import { DeliveryService } from "@/services/DeliveryService";
 import { formatDate, formatFloatToCurrency } from "@/controllers/deliveriesController";
@@ -15,42 +15,73 @@ export default function MainPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(0);
   const [arrivalDate, setArrivalDate] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState(false);
+
+  const router = useRouter(); 
+
+  const checkAuthentication = async () => {
+    const sessionKey = localStorage.getItem("sessionKey");  
+    
+    if (!sessionKey) {
+      router.push("/");
+    } else {
+      setIsAuthenticated(true);
+    }
+  };
+
+  
+  useEffect(() => {
+    setIsClient(true);  
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      checkAuthentication();  
+    }
+  }, [isClient]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchDeliveries();
+    }
+  }, [isAuthenticated]);
 
   const handleEditing = (deliveryID: number) => {
     setIsEditing(deliveryID);
-  }
+  };
 
   const fetchUpdateDelivery = async (deliveryID: number) => {
-      setIsLoading(true);
-      setError(null);
-      setMessage(null);
-  
-      try {
-        await DeliveryService.updateDelivery(deliveryID, arrivalDate); 
-        fetchDeliveries();
-        setMessage("Entrega editada com sucesso");
-        setIsEditing(0);
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Erro desconhecido");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    setIsLoading(true);
+    setError(null);
+    setMessage(null);
+
+    try {
+      await DeliveryService.updateDelivery(deliveryID, arrivalDate); 
+      fetchDeliveries();
+      setMessage("Entrega editada com sucesso");
+      setIsEditing(0);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchDeleteDelivery = async (id: number) => {
-      setIsLoading(true);
-      setError(null);
-      setMessage(null);
-      try {
-        await DeliveryService.deleteDelivery(id);
-        fetchDeliveries();
-        setMessage("Entrega excluída com sucesso");
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : "Erro desconhecido");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    setIsLoading(true);
+    setError(null);
+    setMessage(null);
+    try {
+      await DeliveryService.deleteDelivery(id);
+      fetchDeliveries();
+      setMessage("Entrega excluída com sucesso");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchDeliveries = async () => {
     setIsLoading(true);
@@ -71,7 +102,7 @@ export default function MainPage() {
             delivery.model,
             delivery.type,
             delivery.value,
-            delivery.secure,
+            delivery.secure
           )
       );
       setDeliveries(deliveriesData);
@@ -83,17 +114,13 @@ export default function MainPage() {
     }
   };
 
-  useEffect(() => {
-    fetchDeliveries();
-  }, []); 
-
   return (
     <div>
       <Header title="Mojave Express" />
       <div className="container-fluid">
         <div
           className="col-md-10 offset-md-1 mt-10"
-          style={{ paddingTop: "2%", }}
+          style={{ paddingTop: "2%" }}
         >
           <h1>Bem-vindo ao Mojave Express Manager</h1>
           <p>
@@ -105,7 +132,7 @@ export default function MainPage() {
           <p><i className="bi bi-cash-stack"></i> - Carga Valiosa (Acima de 30k)</p>
           <p><i className="bi bi-lock-fill"></i> - Carga com Seguro</p>
           {isLoading && <p>Carregando...</p>}
-          {message && 
+          {message && (
             <div className="row">
               <div className="col-md-8 offset-md-2">
                 <div className="alert alert-success text-center">
@@ -113,8 +140,8 @@ export default function MainPage() {
                 </div>
               </div>
             </div>
-          }
-          {error && 
+          )}
+          {error && (
             <div className="row">
               <div className="col-md-8 offset-md-2 mt-3 mb-3">
                 <div className="alert alert-danger text-center">
@@ -122,7 +149,7 @@ export default function MainPage() {
                 </div>
               </div>
             </div>
-          }
+          )}
         </div>
         <div className="col-md-10 offset-md-1 mb-4">
           <table className="table table-striped">
@@ -141,12 +168,12 @@ export default function MainPage() {
             </thead>
             <tbody className="text-center">
               {deliveries.map((delivery) => (
-                isEditing == delivery.deliveryID ? (
+                isEditing === delivery.deliveryID ? (
                 <tr key={delivery.deliveryID} className="align-middle">
                   <td>
-                    {delivery.type == "Combustível" && <i className="bi bi-fire m-2"></i> } 
+                    {delivery.type === "Combustível" && <i className="bi bi-fire m-2"></i> } 
                     {delivery.value >= 30000 && <i className="bi bi-cash-stack m-2"></i> }
-                    {delivery.secure == 1 && <i className="bi bi-lock-fill m-2"></i>}
+                    {delivery.secure === 1 && <i className="bi bi-lock-fill m-2"></i>}
                   </td>
                   <td>{delivery.deliveryID}</td>
                   <td>{delivery.destination}</td>
@@ -160,7 +187,7 @@ export default function MainPage() {
                       onChange={(e) => setArrivalDate(e.target.value)}
                       required
                     />
-                </td>
+                  </td>
                   <td>{delivery.name}</td>
                   <td>{delivery.model}</td>
                   <td>{formatFloatToCurrency(delivery.value)}</td>
@@ -169,9 +196,9 @@ export default function MainPage() {
                 ) : (
                   <tr key={delivery.deliveryID} className="align-middle">
                   <td>
-                    {delivery.type == "Combustível" && <i className="bi bi-fire m-2"></i> } 
+                    {delivery.type === "Combustível" && <i className="bi bi-fire m-2"></i> } 
                     {delivery.value >= 30000 && <i className="bi bi-cash-stack m-2"></i> }
-                    {delivery.secure == 1 && <i className="bi bi-lock-fill m-2"></i>}
+                    {delivery.secure === 1 && <i className="bi bi-lock-fill m-2"></i>}
                   </td>
                   <td>{delivery.deliveryID}</td>
                   <td>{delivery.destination}</td>

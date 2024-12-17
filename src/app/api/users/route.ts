@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import mysql, { RowDataPacket } from "mysql2/promise";
+import { setSession } from "@/lib/session";
 
 class PasswordError extends Error {
   constructor(message: string) {
@@ -8,40 +9,12 @@ class PasswordError extends Error {
   }
 }
 
-export async function GET() {
-  try {
-    console.log("Iniciando conexão com o banco de dados...");
-    const connection = await mysql.createConnection({
-      host: "localhost",
-      user: "root",
-      password: "",
-      database: "desafio_pm",
-    });
-
-    console.log("Conexão bem-sucedida! Executando consulta...");
-    const [rows] = await connection.execute("SELECT * FROM users");
-    console.log("Resultados da consulta:", rows);
-
-    await connection.end();
-    console.log("Conexão fechada.");
-    return NextResponse.json(rows);
-  } catch (error) {
-    console.error("Erro ao buscar usuários:", error);
-    return NextResponse.json(
-      { error: "Erro ao buscar usuários" },
-      { status: 500 }
-    );
-  }
-}
-
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    console.log("Dados recebidos no body:", body);
-
     const { email, password } = body;
+
     if (!email || !password) {
-      console.error("Campos obrigatórios ausentes");
       return NextResponse.json(
         { error: "Campos obrigatórios: email, senha" },
         { status: 400 }
@@ -68,10 +41,22 @@ export async function POST(request: Request) {
 
     const user = rows[0];
 
-    if (user["password"] == password) {
+    if (user["password"] === password) {
+      // Gerar uma chave de sessão
+      const sessionKey = Math.random().toString(36).substr(2, 9); // Gera uma chave aleatória de 9 caracteres
+
+      // Armazenar os dados do usuário na sessão
+      const sessionData = {
+        userId: user.insertId,
+        email: user.email,
+        username: user.username,
+      };
+
+      setSession(sessionKey, sessionData); // Armazenar a sessão no servidor
+
       return NextResponse.json({
         message: "Login Efetuado com sucesso",
-        userId: user.insertId, 
+        sessionKey, // Enviar a chave de sessão de volta para o cliente
       });
     } else {
       throw new PasswordError("Senha incorreta, tente novamente!");
