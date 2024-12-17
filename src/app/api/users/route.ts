@@ -62,12 +62,12 @@ export async function POST(request: Request) {
       throw new PasswordError("Senha incorreta, tente novamente!");
     }
   } catch (error) {
-    console.error("Erro ao criar usuário:", error);
+    console.error("Erro ao fazer login:", error);
     if (error instanceof PasswordError) {
       return NextResponse.json({ error: error.message }, { status: 401 });
     } else {
       return NextResponse.json(
-        { error: "Erro ao criar usuário" },
+        { error: "Erro ao fazer login" },
         { status: 500 }
       );
     }

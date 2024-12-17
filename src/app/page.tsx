@@ -32,6 +32,7 @@ export default function LoginPage() {
 
       const data = await response.json();
       setMessage(data.message);
+      localStorage.setItem('sessionKey', data.sessionKey); 
 
       router.push("/main");
     } catch (err: unknown) {

@@ -16,7 +16,6 @@ export default function MainPage() {
   const [isEditing, setIsEditing] = useState(0);
   const [arrivalDate, setArrivalDate] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isClient, setIsClient] = useState(false);
 
   const router = useRouter(); 
 
@@ -30,16 +29,9 @@ export default function MainPage() {
     }
   };
 
-  
   useEffect(() => {
-    setIsClient(true);  
-  }, []);
-
-  useEffect(() => {
-    if (isClient) {
       checkAuthentication();  
-    }
-  }, [isClient]);
+  });
 
   useEffect(() => {
     if (isAuthenticated) {
