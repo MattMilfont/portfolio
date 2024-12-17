@@ -82,7 +82,8 @@ export async function DELETE(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { destination, arrivalDate, type, truckID, driverID, value, secure } = await req.json();
+    const { destination, arrivalDate, type, truckID, driverID, value, secure } =
+      await req.json();
 
     console.log("Dados recebidos na requisição:", {
       destination,
@@ -94,7 +95,14 @@ export async function POST(req: Request) {
       secure,
     });
 
-    if (!driverID || !truckID || !arrivalDate || !type || !destination || !value) {
+    if (
+      !driverID ||
+      !truckID ||
+      !arrivalDate ||
+      !type ||
+      !destination ||
+      !value
+    ) {
       return NextResponse.json(
         { error: "Todos os campos são obrigatórios." },
         { status: 400 }
@@ -102,7 +110,9 @@ export async function POST(req: Request) {
     }
 
     const today = new Date();
-    const departureDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const departureDate = `${today.getFullYear()}-${String(
+      today.getMonth() + 1
+    ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
     const arrival = new Date(arrivalDate);
     const departure = new Date(departureDate);
@@ -124,31 +134,41 @@ export async function POST(req: Request) {
 
     console.log("Conexão bem-sucedida! Executando consultas...");
 
-    const [truckDeliveries] = await connection.execute(`
+    // Corrigindo a consulta e os parâmetros
+    const [truckDeliveries] = await connection.execute(
+      `
       SELECT * FROM deliveries
       WHERE truckID = ? AND (
-        (departureDate <= ? AND arrivalDate >= ?)  -- Verifica se a nova entrega se sobrepõe com uma entrega existente
+        (departureDate <= ? AND arrivalDate >= ?)
       )
-    `, [
-      truckID,
-      arrivalDate, 
-    ]);
+    `,
+      [
+        truckID,
+        departureDate, // parâmetro para verificar overlap
+        arrivalDate, // parâmetro para verificar overlap
+      ]
+    );
 
     if (Array.isArray(truckDeliveries) && truckDeliveries.length > 0) {
+      await connection.end();
       return NextResponse.json(
         { error: "O caminhão já está em outra entrega nesse período." },
         { status: 400 }
       );
     }
 
-    const [truckDeliveriesCount] = await connection.execute(`
+    const [truckDeliveriesCount] = await connection.execute(
+      `
       SELECT COUNT(*) AS deliveryCount FROM deliveries
       WHERE truckID = ? AND arrivalDate LIKE ?
-    `, [truckID, `${departureDate.slice(0, 7)}%`]);
+    `,
+      [truckID, `${departureDate.slice(0, 7)}%`]
+    );
 
     if (Array.isArray(truckDeliveriesCount) && truckDeliveriesCount[0]) {
       const count = (truckDeliveriesCount[0] as any).deliveryCount;
       if (count >= 4) {
+        await connection.end();
         return NextResponse.json(
           { error: "O caminhão já fez 4 entregas neste mês." },
           { status: 400 }
@@ -156,24 +176,39 @@ export async function POST(req: Request) {
       }
     }
 
-    const [driverDeliveries] = await connection.execute(`
+    const [driverDeliveries] = await connection.execute(
+      `
       SELECT * FROM deliveries
       WHERE driverID = ? AND departureDate = ?
-    `, [driverID, departureDate]);
+    `,
+      [driverID, departureDate]
+    );
 
     if (Array.isArray(driverDeliveries) && driverDeliveries.length > 0) {
+      await connection.end();
       return NextResponse.json(
-        { error: "O motorista já está alocado em outra entrega na data de saída." },
+        {
+          error:
+            "O motorista já está alocado em outra entrega na data de saída.",
+        },
         { status: 400 }
       );
     }
 
-    const [driverDeliveriesForNordeste] = await connection.execute(`
+    const [driverDeliveriesForNordeste] = await connection.execute(
+      `
       SELECT * FROM deliveries
       WHERE driverID = ? AND destination = 'Nordeste' AND arrivalDate LIKE ?
-    `, [driverID, `${departureDate.slice(0, 7)}%`]);
+    `,
+      [driverID, `${departureDate.slice(0, 7)}%`]
+    );
 
-    if (destination === "Nordeste" && Array.isArray(driverDeliveriesForNordeste) && driverDeliveriesForNordeste.length > 0) {
+    if (
+      destination === "Nordeste" &&
+      Array.isArray(driverDeliveriesForNordeste) &&
+      driverDeliveriesForNordeste.length > 0
+    ) {
+      await connection.end();
       return NextResponse.json(
         { error: "O motorista já fez uma entrega para o Nordeste neste mês." },
         { status: 400 }
@@ -195,7 +230,16 @@ export async function POST(req: Request) {
       correctedValue = correctedValue * 1.3;
     }
 
-    const values = [driverID, truckID, departureDate, arrivalDate, type, destination, correctedValue, secure];
+    const values = [
+      driverID,
+      truckID,
+      departureDate,
+      arrivalDate,
+      type,
+      destination,
+      correctedValue,
+      secure,
+    ];
 
     const [result] = await connection.execute(query, values);
 
