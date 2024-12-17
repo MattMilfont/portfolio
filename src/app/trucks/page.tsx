@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/header";
 import { Truck, TruckModel } from "@/models/TruckModel";
 import { TruckService } from "@/services/TruckService";
+import { useRouter } from "next/navigation";
 
 export default function TrucksPage() {
   const [model, setNewTruck] = useState("");
@@ -13,6 +14,30 @@ export default function TrucksPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  
+    const router = useRouter(); 
+  
+    const checkAuthentication = async () => {
+      const sessionKey = localStorage.getItem("sessionKey");  
+      
+      if (!sessionKey) {
+        router.push("/");
+      } else {
+        setIsAuthenticated(true);
+      }
+    };
+    
+    
+    useEffect(() => {
+        checkAuthentication();  
+    });
+  
+    useEffect(() => {
+      if (isAuthenticated) {
+        fetchTrucks();
+      }
+    }, [isAuthenticated]);
 
   const fetchDeleteTruck = async (id: number) => {
     setIsLoading(true);
