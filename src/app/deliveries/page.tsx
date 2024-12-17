@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 
 import Header from "@/components/header";
 
+
 import { Truck, TruckModel } from "@/models/TruckModel";
 import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 
@@ -12,6 +13,7 @@ import { DriverService } from "@/services/DriverService";
 import { Driver, DriverModel } from "@/models/DriverModel";
 import { DeliveryService } from "@/services/DeliveryService";
 import { destinationOptions, formatCurrency, formatDate, formatFloatToCurrency, parseCurrencyToNumber, secureOptions, typeOptions, valueCalculation } from "@/controllers/deliveriesController";
+import { useRouter } from "next/navigation";
 
 export default function DeliveriesPage() {
   const [message, setMessage] = useState<string | null>(null);
@@ -27,6 +29,23 @@ export default function DeliveriesPage() {
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  const router = useRouter(); 
+
+  const checkAuthentication = async () => {
+    const sessionKey = localStorage.getItem("sessionKey");  
+    
+    if (!sessionKey) {
+      router.push("/");
+    } else {
+      setIsAuthenticated(true);
+    }
+  };
+
+  useEffect(() => {
+      checkAuthentication();  
+    });
 
   const fetchNewDelivery = async () => {
     setIsLoading(true);
@@ -117,10 +136,12 @@ export default function DeliveriesPage() {
   };
 
   useEffect(() => {
-    fetchTrucks();
-    fetchDrivers();
-    fetchDeliveries();
-  }, []);
+    if(isAuthenticated){
+      fetchTrucks();
+      fetchDrivers();
+      fetchDeliveries();
+    }
+  }, [isAuthenticated]);
 
   return (
     <div>

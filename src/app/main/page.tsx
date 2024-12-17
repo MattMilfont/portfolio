@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";  // Correção: importando do 'next/navigation' para garantir o funcionamento
+import { useRouter } from "next/navigation";
 
 import { Delivery, DeliveryModel } from "@/models/DeliveryModel";
 import Header from "@/components/header";
@@ -28,7 +28,7 @@ export default function MainPage() {
       setIsAuthenticated(true);
     }
   };
-
+  
   
   useEffect(() => {
       checkAuthentication();  
