@@ -47,9 +47,12 @@ export default function LoginPage() {
 
   return (
     <div className="container mt-5">
+      <div className="row">
+        <div className="col-md-4 offset-md-4 text-center">
+          <img src="../assets/mojave-logo-branco.png" width="80%" />
+        </div>
+      </div>
       <div className="col-md-8 offset-md-2">
-        <h2 className="mb-4">Login</h2>
-
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             E-mail
@@ -63,7 +66,6 @@ export default function LoginPage() {
             required
           />
         </div>
-
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
             Senha
@@ -77,15 +79,15 @@ export default function LoginPage() {
             required
           />
         </div>
-
-        <button
-          className="btn btn-primary w-100"
-          onClick={handleLogin}
-          disabled={isLoading}
-        >
+        <div className="row text-center">
+          <button
+            className="btn btn-primary w-80"
+            onClick={handleLogin}
+            disabled={isLoading}
+          >
           {isLoading ? "Carregando..." : "Entrar"}
-        </button>
-
+          </button>
+        </div>
         {message && <div className="alert alert-success mt-3">{message}</div>}
         {error && <div className="alert alert-danger mt-3">{error}</div>}
       </div>
