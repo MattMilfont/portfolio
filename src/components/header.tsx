@@ -1,4 +1,5 @@
 import React from "react";
+import { removeSession } from "@/lib/session";
 
 interface HeaderProps {
   title: string;
@@ -61,6 +62,22 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
               >
                 <b><i className="bi bi-box-seam-fill"></i> Entregas</b>
               </a>
+            </li>
+            <li className="nav-item">
+              <button
+                  className="nav-link"
+                  style={{ color: "white" }}
+                  onClick={()=>{
+                    const sessionKey = localStorage.getItem('sessionKey');
+                    if(sessionKey != null){
+                      removeSession(sessionKey);
+                    }
+                    localStorage.removeItem('sessionKey');
+                    window.location.href = '/';
+                  }}
+                >
+                <b><i className="bi bi-box-arrow-left"></i> Logout</b>
+              </button>
             </li>
           </ul>
         </div>
