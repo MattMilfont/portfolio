@@ -1,5 +1,4 @@
-import { User } from "../types/UserTypes";
-import { UserModel } from "../models/UserModel";
+import { User, UserModel } from "../models/UserModel";
 
 export const getUsers = async (): Promise<UserModel[]> => {
   const response = await fetch("/api/users", { cache: "no-store" });

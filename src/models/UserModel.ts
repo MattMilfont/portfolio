@@ -1,4 +1,10 @@
-import { User } from "../types/UserTypes";
+
+export interface User {
+  userID: string;
+  name: string;
+  email: string;
+  password: string;
+}
 
 export class UserModel implements User {
   userID: string;
