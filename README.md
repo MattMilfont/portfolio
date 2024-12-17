@@ -8,7 +8,7 @@ Se você está com dúvidas sobre como funciona o projeto e como configurar as d
 
 ## Manual do Usuário
 
-Se você quer enteder o funcionamento do sistema sem a parte técnica, basta acessar o Manual do Usuário clicando aqui, faremos o máximo de simplificações para que você entenda como usar. Além do manual, você pode acessar também o tutorial aqui.
+Se você quer enteder o funcionamento do sistema sem a parte técnica, basta acessar o Manual do Usuário [clicando aqui](https://www.canva.com/design/DAGZf1WwkK0/4T0zI1Pmh9xlN6ymM-B89A/view?utm_content=DAGZf1WwkK0&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h3db03acf61), faremos o máximo de simplificações para que você entenda como usar. Além do manual, você pode acessar também o tutorial aqui.
 
 ## Configurações Iniciais do Sistema
 
