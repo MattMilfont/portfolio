@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 17/12/2024 às 15:46
+-- Tempo de geração: 17/12/2024 às 15:49
 -- Versão do servidor: 10.4.28-MariaDB
 -- Versão do PHP: 8.2.4
 
@@ -39,17 +39,6 @@ CREATE TABLE `deliveries` (
   `secure` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Despejando dados para a tabela `deliveries`
---
-
-INSERT INTO `deliveries` (`deliveryID`, `driverID`, `truckID`, `departureDate`, `arrivalDate`, `type`, `destination`, `value`, `secure`) VALUES
-(20, 4, 7, '2024-12-16', '2025-05-06', 'Eletrônicos', 'Amazônia', 60000, 0),
-(21, 5, 9, '2024-12-17', '2024-12-18', 'Eletrônicos', 'Argentina', 28000, 1),
-(22, 2, 8, '2024-12-17', '2024-12-26', 'Combustível', 'Nordeste', 39000, 0),
-(23, 7, 11, '2024-12-17', '2070-07-08', 'Comum', 'Nordeste', 1300, 0),
-(24, 8, 13, '2024-12-17', '3456-02-01', 'Comum', 'Centro-oeste', 2, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -69,10 +58,7 @@ INSERT INTO `drivers` (`driverID`, `name`) VALUES
 (2, 'Fernando Miguel'),
 (3, 'Arnaldo Fernandes Marques'),
 (4, 'Carlos Antônio Pereira'),
-(5, 'Miguel Farias Marques'),
-(6, 'Luiza Rocha Torres'),
-(7, 'Seu Dudu verde'),
-(8, 'cachorrinhos');
+(5, 'Miguel Farias Marques');
 
 -- --------------------------------------------------------
 
@@ -93,9 +79,7 @@ INSERT INTO `trucks` (`truckID`, `model`) VALUES
 (7, 'Teste Max 2023/2024'),
 (8, 'Teste Pro 2022'),
 (9, 'Teste Devs 2021/2022'),
-(10, 'Teste Atual 2023/2024'),
-(11, 'Torres demais'),
-(13, 'asdfghjkl;\'\'dfghnm,');
+(10, 'Teste Atual 2023/2024');
 
 -- --------------------------------------------------------
 
@@ -115,7 +99,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`userID`, `name`, `password`, `email`) VALUES
-(1, 'Matheus Milfont', '12345678', 'matheusnmilfontc@gmail.com');
+(1, 'Matheus Milfont', '11032003', 'matheusnmilfontc@gmail.com'),
+(2, 'Usuário Teste', '12345678', 'usuarioteste@teste.com');
 
 --
 -- Índices para tabelas despejadas
@@ -171,7 +156,7 @@ ALTER TABLE `trucks`
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
