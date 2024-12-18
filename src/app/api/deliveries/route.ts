@@ -223,11 +223,11 @@ export async function POST(req: Request) {
     let correctedValue = value;
 
     if (destination === "Amazônia") {
-      correctedValue = correctedValue * 1.2;
+      correctedValue = correctedValue * 1.3;
     } else if (destination === "Argentina") {
       correctedValue = correctedValue * 1.4;
     } else if (destination === "Nordeste") {
-      correctedValue = correctedValue * 1.3;
+      correctedValue = correctedValue * 1.2;
     }
 
     const values = [
