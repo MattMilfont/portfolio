@@ -2,13 +2,13 @@ export const valueCalculation = (destination: string, value: string) => {
     let numericValue = Number(value.replace(/\D/g, ""));
 
     if(destination == "Amazônia"){
-      numericValue = numericValue * 1.2;
+      numericValue = numericValue * 1.3;
     }
     else if(destination == "Argentina"){
       numericValue = numericValue * 1.4;
     }
     else if(destination == "Nordeste"){
-      numericValue = numericValue * 1.3;
+      numericValue = numericValue * 1.2;
     }
 
     const formattedValue = (Number(numericValue) / 100).toLocaleString("pt-BR", {
