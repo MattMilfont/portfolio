@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { authentication } from "@/services/UserService";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -17,14 +18,7 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:3333/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
+      const response = await authentication(email, password);
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "Erro desconhecido");
