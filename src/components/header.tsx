@@ -1,5 +1,4 @@
 import React from "react";
-import { removeSession } from "@/lib/session";
 
 interface HeaderProps {
   title: string;
@@ -10,12 +9,7 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
     <nav className="navbar navbar-expand-lg bg-primary">
       <div className="container-fluid">
         <a className="navbar-brand" href="/main" style={{ color: "white" }}>
-          <img
-              src="../assets/mojave-logo.png"
-              alt="Mojave Logo"
-              className="img-fluid"
-              style={{ maxWidth: "100px", height: "auto" }}
-            />
+          {title}
         </a>
         <button
           className="navbar-toggler"
@@ -37,12 +31,16 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 aria-current="page"
                 href="/main"
               >
-                <b><i className="bi bi-house-fill"></i> Home</b>
+                <b>
+                  <i className="bi bi-house-fill"></i> Home
+                </b>
               </a>
             </li>
             <li className="nav-item">
               <a className="nav-link" style={{ color: "white" }} href="/trucks">
-                <b><i className="bi bi-truck"></i> Caminhões</b>
+                <b>
+                  <i className="bi bi-truck"></i> Caminhões
+                </b>
               </a>
             </li>
             <li className="nav-item">
@@ -51,7 +49,9 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 style={{ color: "white" }}
                 href="/drivers"
               >
-                <b><i className="bi bi-person-fill"></i> Motoristas</b>
+                <b>
+                  <i className="bi bi-person-fill"></i> Motoristas
+                </b>
               </a>
             </li>
             <li className="nav-item">
@@ -60,23 +60,27 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 style={{ color: "white" }}
                 href="/deliveries"
               >
-                <b><i className="bi bi-box-seam-fill"></i> Entregas</b>
+                <b>
+                  <i className="bi bi-box-seam-fill"></i> Entregas
+                </b>
               </a>
             </li>
             <li className="nav-item">
               <button
-                  className="nav-link"
-                  style={{ color: "white" }}
-                  onClick={()=>{
-                    const sessionKey = localStorage.getItem('sessionKey');
-                    if(sessionKey != null){
-                      removeSession(sessionKey);
-                    }
-                    localStorage.removeItem('sessionKey');
-                    window.location.href = '/';
-                  }}
-                >
-                <b><i className="bi bi-box-arrow-left"></i> Logout</b>
+                className="nav-link"
+                style={{ color: "white" }}
+                onClick={() => {
+                  // const sessionKey = localStorage.getItem("sessionKey");
+                  // if (sessionKey != null) {
+                  //   removeSession(sessionKey);
+                  // }
+                  localStorage.removeItem("sessionKey");
+                  window.location.href = "/";
+                }}
+              >
+                <b>
+                  <i className="bi bi-box-arrow-left"></i> Logout
+                </b>
               </button>
             </li>
           </ul>
