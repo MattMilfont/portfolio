@@ -1,10 +1,16 @@
+
+//Importando a livraria de sessão para utilizar a função removeSession
 import { removeSession } from "@/lib/session";
+
+//Importando o React
 import React from "react";
 
+//Declarando as propriedades de um cabeçalho
 interface HeaderProps {
   title: string;
 }
 
+//Definido a estilização do header, importando as propriedade declaradas anteriormente
 const Header: React.FC<HeaderProps> = ({ title }) => {
   return (
     <nav className="navbar navbar-expand-lg bg-primary">
