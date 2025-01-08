@@ -1,28 +1,28 @@
 "use client";
 
-// import { useState, useEffect } from "react";
-// import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import Header from "@/components/header";
 
 export default function MainPage() {
-  // const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // const router = useRouter(); 
+  const router = useRouter(); 
 
-  // const checkAuthentication = async () => {
-  //   const sessionKey = localStorage.getItem("sessionKey");  
+  const checkAuthentication = async () => {
+    const sessionKey = localStorage.getItem("sessionKey");  
     
-  //   if (!sessionKey) {
-  //     router.push("/");
-  //   } else {
-  //     setIsAuthenticated(true);
-  //   }
-  // };
+    if (!sessionKey) {
+      router.push("/");
+    } else {
+      setIsAuthenticated(true);
+    }
+  };
   
-  // useEffect(() => {
-  //     checkAuthentication();  
-  // });
+  useEffect(() => {
+      checkAuthentication();  
+  });
 
   return (
     <div>

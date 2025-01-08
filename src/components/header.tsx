@@ -1,3 +1,4 @@
+import { removeSession } from "@/lib/session";
 import React from "react";
 
 interface HeaderProps {
@@ -70,10 +71,10 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 className="nav-link"
                 style={{ color: "white" }}
                 onClick={() => {
-                  // const sessionKey = localStorage.getItem("sessionKey");
-                  // if (sessionKey != null) {
-                  //   removeSession(sessionKey);
-                  // }
+                  const sessionKey = localStorage.getItem("sessionKey");
+                  if (sessionKey != null) {
+                    removeSession(sessionKey);
+                  }
                   localStorage.removeItem("sessionKey");
                   window.location.href = "/";
                 }}
