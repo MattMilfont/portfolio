@@ -1,3 +1,9 @@
+/* 
+  Esse arquivo é utilizado para definir e estruturar os dados do usuário
+  ao definir a interface User, mas também armazena a classe que pode ser utilizada
+  para armazenar as informações relacionadas ao Usuário.
+*/
+
 
 export interface User {
   userID: string;
