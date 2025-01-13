@@ -68,13 +68,13 @@ export default function LoginPage() {
   
   //Parte visual da Página
   return (
-    <div className="container mt-5">
+    <div className="container mt-4">
       <div className="row">
         <div className="col-md-4 offset-md-4 text-center">
-          <img src="../assets/mojave-logo-branco.png" width="80%" />
+          <img src="../assets/logo.png" width="80%" />
         </div>
       </div>
-      <div className="col-md-8 offset-md-2">
+      <div className="col-md-6 offset-md-3">
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             E-mail

@@ -43,35 +43,13 @@ const Header: React.FC<HeaderProps> = ({ title }) => {
                 </b>
               </a>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link" style={{ color: "white" }} href="/trucks">
                 <b>
                   <i className="bi bi-truck"></i> Caminhões
                 </b>
               </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className="nav-link"
-                style={{ color: "white" }}
-                href="/drivers"
-              >
-                <b>
-                  <i className="bi bi-person-fill"></i> Motoristas
-                </b>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a
-                className="nav-link"
-                style={{ color: "white" }}
-                href="/deliveries"
-              >
-                <b>
-                  <i className="bi bi-box-seam-fill"></i> Entregas
-                </b>
-              </a>
-            </li>
+            </li> */}
             <li className="nav-item">
               <button
                 className="nav-link"

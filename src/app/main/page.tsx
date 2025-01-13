@@ -37,16 +37,15 @@ export default function MainPage() {
   //Parte visual da Página
   return (
     <div>
-      <Header title="Mojave Express" />
+      <Header title="Template de Projeto" />
       <div className="container-fluid">
         <div
           className="col-md-10 offset-md-1 mt-10"
           style={{ paddingTop: "2%" }}
         >
-          <h1>Bem-vindo ao Mojave Express Manager</h1>
+          <h1>Bem-vindo ao Template de Projeto</h1>
           <p>
-            Esse sistema foi feito para que você possa gerenciar a sua frota de
-            caminhões de forma prática e fácil.
+            Esse sistema é um modelo de aplicação que facilita a produção de novos projetos e a escalabilidade das soluções futuras.
           </p>
         </div>
       </div>
