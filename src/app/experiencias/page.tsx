@@ -9,7 +9,7 @@ export default function ExperienciasPage() {
       <Header page="/experiencias"></Header>
       <div className="container-fluid">
         <div className="row">
-          <div className="col-10 offset-1 mt-5">
+          <div className="col-md-10 offset-md-1 mt-5">
             <div className="accordion accordion-dark" id="accordionExample">
               <div className="accordion-item">
                 <h2 className="accordion-header" id="headingOne">
@@ -33,11 +33,18 @@ export default function ExperienciasPage() {
                   style={{ backgroundColor: "#212529", color: "white" }}
                 >
                   <div className="accordion-body bg-dark text-white">
-                    Esta é minha posição atual e hoje atuo como desenvolvedor full-stack pleno em NextJS, Vite e NestJS. Como programador na
-                     Polícia Militar do Ceará tenho atribuições fundamentais nas execuções das tarefas de segurança pública devido a automatização dos 
-                     processos via sistemas web. Nessa experiência consegui colocar em prática diversas áreas do conhecimento, como desenvolvimento de APIs 
-                     REST usando NodeJS, Modelagem de Dados, Prototipagem de Sistemas e desenvolvimento Front-end usando React. Também pude lidar com sistema legado 
-                     em PHP que utilizam CodeIgniter, colocando em prática minha experiência com PHP aplicado em sistemas robustos.
+                    Esta é minha posição atual e hoje atuo como desenvolvedor
+                    full-stack pleno em NextJS, Vite e NestJS. Como programador
+                    na Polícia Militar do Ceará tenho atribuições fundamentais
+                    nas execuções das tarefas de segurança pública devido a
+                    automatização dos processos via sistemas web. Nessa
+                    experiência consegui colocar em prática diversas áreas do
+                    conhecimento, como desenvolvimento de APIs REST usando
+                    NodeJS, Modelagem de Dados, Prototipagem de Sistemas e
+                    desenvolvimento Front-end usando React. Também pude lidar
+                    com sistema legado em PHP que utilizam CodeIgniter,
+                    colocando em prática minha experiência com PHP aplicado em
+                    sistemas robustos.
                   </div>
                 </div>
               </div>
@@ -52,8 +59,7 @@ export default function ExperienciasPage() {
                     aria-controls="collapseTwo"
                     style={{ backgroundColor: "#212529", color: "white" }}
                   >
-                    2024 - Secretaria de Segurança Pública e Defesa
-                    Social
+                    2024 - Secretaria de Segurança Pública e Defesa Social
                   </button>
                 </h2>
                 <div
@@ -63,15 +69,13 @@ export default function ExperienciasPage() {
                   data-bs-parent="#accordionExample"
                 >
                   <div className="accordion-body bg-dark text-white">
-                    <strong>This is the second item's accordion body.</strong>{" "}
-                    It is hidden by default, until the collapse plugin adds the
-                    appropriate classes that we use to style each element. These
-                    classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any
-                    of this with custom CSS or overriding our default variables.
-                    It's also worth noting that just about any HTML can go
-                    within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
+                    Na Secretaria de Segurança Pública e Defesa Social do Ceará
+                    atuei em um frente mobile, focando principalmente em
+                    desenvolvimento de Apps IOS e Android com Flutter e Dart.
+                    Tive projetos robustos que puderam trazer impactos muito
+                    positivos nas operações de segurança e defesa social,
+                    aplicando conceitos de Arquitetura de Software e
+                    Gerenciamento de Estados.
                   </div>
                 </div>
               </div>
@@ -96,15 +100,14 @@ export default function ExperienciasPage() {
                   data-bs-parent="#accordionExample"
                 >
                   <div className="accordion-body bg-dark text-white">
-                    <strong>This is the third item's accordion body.</strong> It
-                    is hidden by default, until the collapse plugin adds the
-                    appropriate classes that we use to style each element. These
-                    classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any
-                    of this with custom CSS or overriding our default variables.
-                    It's also worth noting that just about any HTML can go
-                    within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
+                    A Radix é uma empresa de software, engenharia e automação
+                    que presta serviços para diversas multinacionais com grande
+                    foco em ambientes industriais. Na empresa atuei na área de
+                    análise de dados industriais, acessando servidores e
+                    automatizando processos de coletas de dados dos sensores
+                    fabris da Braskem, tratando e desenvolvendo soluções que
+                    pudessem mostrar em tempo real as situações do chão de
+                    fábrica.
                   </div>
                 </div>
               </div>
@@ -129,15 +132,13 @@ export default function ExperienciasPage() {
                   data-bs-parent="#accordionExample"
                 >
                   <div className="accordion-body bg-dark text-white">
-                    <strong>This is the third item's accordion body.</strong> It
-                    is hidden by default, until the collapse plugin adds the
-                    appropriate classes that we use to style each element. These
-                    classes control the overall appearance, as well as the
-                    showing and hiding via CSS transitions. You can modify any
-                    of this with custom CSS or overriding our default variables.
-                    It's also worth noting that just about any HTML can go
-                    within the <code>.accordion-body</code>, though the
-                    transition does limit overflow.
+                    Na Academia de Segurança Pública do Ceará atuei no
+                    desenvolvimento de aplicações para gestão de informações dos
+                    processos de gestão da AESP. Nessa posição ganhei bastante
+                    experiência desenvolvendo aplicações em PHP utilizando
+                    CodeIfniter e JQuery, reformando sistemas legado e projetos
+                    antigos, tornando-os mais próximos de tecnologias atuais sem
+                    perder a qualidade do processo.
                   </div>
                 </div>
               </div>

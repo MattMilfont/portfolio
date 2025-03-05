@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ page }) => {
   return (
     <div className="container-fluid">
       <div className="row mt-4">
-        <div className="col-12 d-flex justify-content-center">
+        <div className="col-md-12 d-flex justify-content-center">
           <ul className="nav nav-pills">
             <li className="nav-item">
               <a

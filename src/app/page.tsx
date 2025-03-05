@@ -9,7 +9,7 @@ export default function MainPage() {
       <Header page="/main"></Header>
       <div className="container-fluid">
         <div className="row mt-5">
-          <div className="col-12 text-center">
+          <div className="col-md-12 text-center">
             <img
               src="/assets/main.jpg"
               alt="Foto de perfil"
@@ -26,7 +26,7 @@ export default function MainPage() {
           </div>
         </div>
         <div className="row mt-3">
-          <div className="col-8 offset-2">
+          <div className="col-10 offset-1">
             <div
               className="card bg-dark"
               style={{ boxShadow: "0px 10px 30px rgba(255, 255, 255, 0.1)" }}
@@ -49,8 +49,8 @@ export default function MainPage() {
           </div>
         </div>
         <div className="row mt-4 mb-5">
-          <div className="col-5 offset-1 text-center">
-            <div className="row">
+          <div className="col-md-5 offset-md-1 text-center">
+            <div className="row mt-5">
               <div className="col-12">
                 <p className="text-light" style={{ fontSize: 20 }}>
                   <b>Linguagens</b>
@@ -80,8 +80,8 @@ export default function MainPage() {
               </div>
             </div>
           </div>
-          <div className="col-5 text-center">
-            <div className="row">
+          <div className="col-md-5 text-center">
+            <div className="row mt-5">
               <div className="col-12">
                 <p className="text-light" style={{ fontSize: 20 }}>
                   <b>Frameworks</b>
