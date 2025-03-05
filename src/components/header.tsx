@@ -1,77 +1,65 @@
-
-//Importando a livraria de sessão para utilizar a função removeSession
-import { removeSession } from "@/lib/session";
-
-//Importando o React
+// Importando o React
 import React from "react";
 
-//Declarando as propriedades de um cabeçalho
+// Declarando as propriedades de um cabeçalho
 interface HeaderProps {
-  title: string;
+  page: string;
 }
 
-//Definido a estilização do header, importando as propriedade declaradas anteriormente
-const Header: React.FC<HeaderProps> = ({ title }) => {
+// Definindo a estilização do header, importando as propriedades declaradas anteriormente
+const Header: React.FC<HeaderProps> = ({ page }) => {
+  // Função para verificar se o link é o da página atual
+  const isActive = (link: string) =>
+    link === page ? "nav-link active" : "nav-link text-light";
+
   return (
-    <nav className="navbar navbar-expand-lg bg-primary">
-      <div className="container-fluid">
-        <a className="navbar-brand" href="/main" style={{ color: "white" }}>
-          {title}
-        </a>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+    <div className="container-fluid">
+      <div className="row mt-4">
+        <div className="col-12 d-flex justify-content-center">
+          <ul className="nav nav-pills">
             <li className="nav-item">
               <a
-                className="nav-link"
-                style={{ color: "white" }}
+                className={isActive("/main")}
+                style={{ backgroundColor: page === "/main" ? "green" : "" }}
                 aria-current="page"
-                href="/main"
+                href="/"
               >
-                <b>
-                  <i className="bi bi-house-fill"></i> Home
-                </b>
+                Home
               </a>
             </li>
-            {/* <li className="nav-item">
-              <a className="nav-link" style={{ color: "white" }} href="/trucks">
-                <b>
-                  <i className="bi bi-truck"></i> Caminhões
-                </b>
-              </a>
-            </li> */}
             <li className="nav-item">
-              <button
-                className="nav-link"
-                style={{ color: "white" }}
-                onClick={() => {
-                  const sessionKey = localStorage.getItem("sessionKey");
-                  if (sessionKey != null) {
-                    removeSession(sessionKey);
-                  }
-                  localStorage.removeItem("sessionKey");
-                  window.location.href = "/";
+              <a
+                className={isActive("/projetos")}
+                href="/projetos"
+                style={{ backgroundColor: page === "/projetos" ? "green" : "" }}
+              >
+                Projetos
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className={isActive("/experiencias")}
+                href="/experiencias"
+                style={{
+                  backgroundColor: page === "/experiencias" ? "green" : "",
                 }}
               >
-                <b>
-                  <i className="bi bi-box-arrow-left"></i> Logout
-                </b>
-              </button>
+                Experiências
+              </a>
+            </li>
+            <li className="nav-item">
+              <a
+                className={isActive("/contato")}
+                href="/contato"
+                style={{ backgroundColor: page === "/contato" ? "green" : "" }}
+              >
+                Contato
+              </a>
             </li>
           </ul>
         </div>
       </div>
-    </nav>
+    </div>
   );
 };
 
