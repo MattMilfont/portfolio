@@ -26,7 +26,7 @@ export default function MainPage() {
           </div>
         </div>
         <div className="row mt-3">
-          <div className="col-10 offset-1">
+          <div className="col-8 offset-2">
             <div
               className="card bg-dark"
               style={{ boxShadow: "0px 10px 30px rgba(255, 255, 255, 0.1)" }}
@@ -49,7 +49,40 @@ export default function MainPage() {
           </div>
         </div>
         <div className="row mt-4 mb-5">
-          <div className="col-md-5 offset-md-1 text-center">
+        <div className="col-md-6 offset-md-3 text-center">
+          <div className="row mt-5">
+              <div className="col-12">
+                <p className="text-light" style={{ fontSize: 20 }}>
+                  <b>Frameworks</b>
+                </p>
+              </div>
+            </div>
+            <div className="row text-center mt-5">
+              <div className="col-4 mt-1">
+                <img src="/assets/nest.svg" width={75} />
+              </div>
+              <div className="col-4">
+                <img src="/assets/next.svg" width={75} />
+              </div>
+              <div className="col-4 mt-2">
+                <img src="/assets/flutter.svg" width={60} />
+              </div>
+            </div>
+            <div className="row text-center mt-5">
+              <div className="col-4 mt-2">
+                <img src="/assets/fastapi.svg" width={75} />
+              </div>
+              <div className="col-4 mt-2">
+                <img src="/assets/react.svg" width={60} />
+              </div>
+              <div className="col-4 mt-3">
+                <img src="/assets/codeigniter.svg" width={60} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row mt-4 mb-5">
+          <div className="col-md-6 offset-md-3 text-center">
             <div className="row mt-5">
               <div className="col-12">
                 <p className="text-light" style={{ fontSize: 20 }}>
@@ -77,37 +110,6 @@ export default function MainPage() {
               </div>
               <div className="col-4 mt-2">
                 <img src="/assets/dart.svg" width={75} />
-              </div>
-            </div>
-          </div>
-          <div className="col-md-5 text-center">
-            <div className="row mt-5">
-              <div className="col-12">
-                <p className="text-light" style={{ fontSize: 20 }}>
-                  <b>Frameworks</b>
-                </p>
-              </div>
-            </div>
-            <div className="row text-center mt-5">
-              <div className="col-4 mt-1">
-                <img src="/assets/nest.svg" width={75} />
-              </div>
-              <div className="col-4">
-                <img src="/assets/next.svg" width={75} />
-              </div>
-              <div className="col-4 mt-2">
-                <img src="/assets/flutter.svg" width={60} />
-              </div>
-            </div>
-            <div className="row text-center mt-5">
-              <div className="col-4 mt-2">
-                <img src="/assets/fastapi.svg" width={75} />
-              </div>
-              <div className="col-4 mt-2">
-                <img src="/assets/react.svg" width={60} />
-              </div>
-              <div className="col-4 mt-3">
-                <img src="/assets/codeigniter.svg" width={60} />
               </div>
             </div>
           </div>
